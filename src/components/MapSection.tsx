@@ -246,7 +246,11 @@ function CustomMarker({ trail, onTrailClick, isVisible }: { trail: Trail; onTrai
         closeButton={false}
         autoPan={false}
       >
-        <div className="popup-content ticket-popup">
+        <div 
+          className="popup-content ticket-popup"
+          onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+        >
           <div className="ticket-layout">
             {trail.image && (
               <>
@@ -293,7 +297,18 @@ function CustomMarker({ trail, onTrailClick, isVisible }: { trail: Trail; onTrai
                 </div>
               </div>
           <button 
-            onClick={() => onTrailClick(trail)}
+            onClick={(e) => {
+              e.stopPropagation()
+              e.preventDefault()
+              // Закрываем попап Leaflet перед открытием модального окна
+              if (markerRef.current) {
+                markerRef.current.closePopup()
+              }
+              // Небольшая задержка, чтобы попап успел закрыться
+              setTimeout(() => {
+                onTrailClick(trail)
+              }, 100)
+            }}
                 className="ticket-button"
           >
                 <span>Подробнее</span>

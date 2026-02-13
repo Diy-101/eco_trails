@@ -8,19 +8,37 @@ interface TrailModalProps {
 }
 
 export default function TrailModal({ trail, isOpen, onClose }: TrailModalProps) {
-  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  // Подготовка массива изображений для карусели
+  const getImages = (trail: Trail): string[] => {
+    const images: string[] = []
+    const mainImage = trail.image.includes(' карточка') 
+      ? trail.image 
+      : trail.image.replace('.png', ' карточка.png')
+    images.push(mainImage)
+    // Если есть оригинальное изображение и оно отличается, добавляем его
+    if (!trail.image.includes(' карточка')) {
+      images.push(trail.image)
+    }
+    return images
+  }
+
+  const images = trail ? getImages(trail) : []
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
       document.documentElement.style.overflow = 'hidden'
+      setCurrentImageIndex(0)
     } else {
       document.body.style.overflow = ''
       document.documentElement.style.overflow = ''
-      if (currentAudio && !currentAudio.paused) {
-        currentAudio.pause()
-        setCurrentAudio(null)
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current = null
         setIsPlaying(false)
       }
     }
@@ -28,8 +46,12 @@ export default function TrailModal({ trail, isOpen, onClose }: TrailModalProps) 
     return () => {
       document.body.style.overflow = ''
       document.documentElement.style.overflow = ''
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current = null
+      }
     }
-  }, [isOpen, currentAudio])
+  }, [isOpen])
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -45,122 +67,262 @@ export default function TrailModal({ trail, isOpen, onClose }: TrailModalProps) 
   const handleAudioClick = () => {
     if (!trail?.audioUrl) return
 
-    if (currentAudio && !currentAudio.paused) {
-      currentAudio.pause()
-      setCurrentAudio(null)
+    if (audioRef.current && !audioRef.current.paused) {
+      audioRef.current.pause()
       setIsPlaying(false)
     } else {
       const audio = new Audio(trail.audioUrl)
+      audioRef.current = audio
       audio.play()
-      setCurrentAudio(audio)
       setIsPlaying(true)
       
       audio.addEventListener('ended', () => {
-        setCurrentAudio(null)
+        audioRef.current = null
         setIsPlaying(false)
       })
       
       audio.addEventListener('error', () => {
-        setCurrentAudio(null)
+        audioRef.current = null
         setIsPlaying(false)
       })
     }
   }
 
-  if (!trail) return null
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length)
+  }
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
+  }
+
+  // Не рендерим модальное окно, если нет trail или оно закрыто
+  if (!trail || !isOpen) {
+    return null
+  }
 
   return (
     <div 
-      className={`fixed top-0 left-0 w-full h-full z-[99999] flex items-center justify-center opacity-0 invisible transition-all duration-300 pointer-events-none ${isOpen ? 'opacity-100 visible pointer-events-all' : ''}`}
+      className="fixed inset-0 w-screen h-screen z-[999999] flex items-center justify-center transition-all duration-300"
+      style={{ 
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 999999,
+        opacity: 1,
+        visibility: 'visible',
+        pointerEvents: 'auto'
+      }}
     >
       <div 
-        className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-black/75 to-black/65 backdrop-blur-[8px] backdrop-saturate-[180%] z-[1] transition-all duration-300"
+        className="absolute inset-0 w-full h-full bg-gradient-to-br from-black/85 to-black/75 backdrop-blur-[10px] backdrop-saturate-[180%] z-[1] transition-all duration-300"
         onClick={onClose}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100%',
+          height: '100%'
+        }}
       />
       <div 
-        className={`relative z-[2] max-w-[1100px] w-[90%] max-h-[90vh] overflow-hidden scale-90 translate-y-5 transition-all duration-400 rounded-2xl blur-sm opacity-0 ${isOpen ? 'scale-100 translate-y-0 blur-0 opacity-100' : ''} max-md:w-[95%] max-md:max-h-[85vh]`}
+        className="relative z-[2] w-[85%] max-w-[1000px] h-[80vh] max-h-[80vh] overflow-hidden scale-100 translate-y-0 blur-0 opacity-100 transition-all duration-500 rounded-3xl"
+        onClick={(e) => e.stopPropagation()}
       >
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-white/95 border-none rounded-full cursor-pointer z-10 transition-all duration-200 text-black hover:bg-white"
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/95 hover:bg-white border border-gray-300 rounded-full cursor-pointer z-20 transition-all duration-200 text-black shadow-md hover:scale-105"
           aria-label="Закрыть"
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
-        <div className="bg-white rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.3)] max-h-[90vh] flex max-md:flex-col">
-          <div className="w-[45%] flex-shrink-0 relative min-h-[500px] flex items-center justify-center bg-[#f5f5f5] max-md:w-full max-md:min-h-[250px] max-md:max-h-[300px]">
-            <img 
-              src={trail.image.includes(' карточка') ? trail.image : trail.image.replace('.png', ' карточка.png')} 
-              alt={trail.name} 
-              className="w-full h-full object-contain block min-h-[500px] max-md:min-h-[200px]"
-            />
-          </div>
-          <div className="flex-1 p-10 flex flex-col gap-6 overflow-y-auto max-h-[90vh] max-md:p-6 max-md:max-h-[calc(85vh-300px)]">
-            <h3 className="text-[28px] font-bold font-sans text-[#1a1a1a] m-0 leading-[1.3] tracking-[-0.02em]">
-              {trail.name}
-              {trail.subtitle && trail.subtitle.trim() && (
-                <span className="text-primary-orange block mt-1">{trail.subtitle}</span>
-              )}
-            </h3>
-            <p className="text-base font-normal font-sans text-[#333333] m-0 leading-[1.7] tracking-[0.01em]">
-              {trail.fullDescription || trail.description}
-            </p>
-            {trail.points && trail.points.length > 0 && (
-              <div className="flex flex-col gap-3 mt-2">
-                {trail.points.map((point, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-primary-orange flex-shrink-0" />
-                    <span className="text-[15px] font-normal font-sans text-black leading-[1.5]">
-                      {point}
-                    </span>
-                  </div>
-                ))}
-              </div>
+        
+        <div className="bg-white rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.4)] h-full flex flex-col">
+          {/* Карусель фотографий */}
+          <div className="relative w-full h-[28%] min-h-[200px] max-h-[280px] bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden rounded-t-3xl">
+            {images.length > 0 && (
+              <>
+                <div className="relative w-full h-full">
+                  <img 
+                    src={images[currentImageIndex]} 
+                    alt={`${trail.name} - фото ${currentImageIndex + 1}`}
+                    className="w-full h-full object-contain transition-opacity duration-500"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement
+                      // Если изображение с " карточка" не найдено, пробуем оригинальное
+                      if (images[currentImageIndex].includes(' карточка')) {
+                        const originalImage = images[currentImageIndex].replace(' карточка.png', '.png')
+                        if (originalImage !== images[currentImageIndex]) {
+                          target.src = originalImage
+                        }
+                      }
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+                </div>
+                
+                {/* Навигация карусели */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={prevImage}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/90 hover:bg-white rounded-full cursor-pointer z-10 transition-all duration-200 shadow-lg hover:scale-110"
+                      aria-label="Предыдущее фото"
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                    <button
+                      onClick={nextImage}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center bg-white/90 hover:bg-white rounded-full cursor-pointer z-10 transition-all duration-200 shadow-lg hover:scale-110"
+                      aria-label="Следующее фото"
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                    
+                    {/* Индикаторы карусели */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                      {images.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentImageIndex(index)}
+                          className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                            index === currentImageIndex 
+                              ? 'bg-white w-8' 
+                              : 'bg-white/50 hover:bg-white/75'
+                          }`}
+                          aria-label={`Фото ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </>
             )}
-            <div className="flex items-end gap-10 mt-auto pt-6 border-t-2 border-black/8 max-md:flex-wrap max-md:gap-5 max-md:flex-col max-md:items-start">
-              <div className="flex flex-col gap-2 items-start">
-                <button
-                  onClick={handleAudioClick}
-                  className={`flex items-center gap-2 px-5 py-3 bg-primary-orange border-none rounded-lg cursor-pointer transition-all duration-200 hover:bg-[#ff9d5c] ${isPlaying ? 'bg-[#ff6b1f]' : ''}`}
-                >
-                  <svg className="w-6 h-6 text-white flex-shrink-0" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
-                  </svg>
-                  <div className="flex items-center gap-1 h-5">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <div 
-                        key={i}
-                        className={`w-0.5 bg-white rounded transition-all duration-300 ${isPlaying ? 'animate-[audioWave_1s_ease-in-out_infinite]' : ''}`}
-                        style={{
-                          height: isPlaying ? undefined : `${8 + i * 2}px`,
-                          animationDelay: isPlaying ? `${(i - 1) * 0.1}s` : undefined
-                        }}
-                      />
+          </div>
+
+          {/* Контент с информацией */}
+          <div className="flex-1 overflow-y-auto rounded-b-3xl">
+            <div className="p-6 md:p-10 flex flex-col gap-5">
+              {/* Заголовок */}
+              <div>
+                <h2 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] m-0 leading-[1.2] tracking-[-0.02em]">
+                  {trail.name}
+                </h2>
+                {trail.subtitle && trail.subtitle.trim() && (
+                  <p className="text-xl md:text-2xl text-primary-orange mt-2 font-semibold">
+                    {trail.subtitle}
+                  </p>
+                )}
+              </div>
+
+              {/* Основная информация */}
+              <div className="flex flex-wrap gap-6 mb-4">
+                {trail.distance && (
+                  <div className="flex items-center gap-3 bg-gray-50 px-6 py-3 rounded-xl">
+                    <svg className="w-6 h-6 text-primary-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <div>
+                      <div className="text-sm text-gray-600 uppercase tracking-wide">Расстояние</div>
+                      <div className="text-xl font-bold text-primary-orange">{trail.distance}</div>
+                    </div>
+                  </div>
+                )}
+                {trail.timing && (
+                  <div className="flex items-center gap-3 bg-gray-50 px-6 py-3 rounded-xl">
+                    <svg className="w-6 h-6 text-primary-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <div className="text-sm text-gray-600 uppercase tracking-wide">Время</div>
+                      <div className="text-xl font-bold text-primary-orange">{trail.timing}</div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Описание */}
+              <div>
+                <h3 className="text-lg font-bold text-[#1a1a1a] mb-3">Описание маршрута</h3>
+                <p className="text-base font-normal text-[#333333] leading-[1.7] tracking-[0.01em]">
+                  {trail.fullDescription || trail.description}
+                </p>
+              </div>
+
+              {/* Точки интереса */}
+              {trail.points && trail.points.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-bold text-[#1a1a1a] mb-3">Точки интереса</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                    {trail.points.map((point, index) => (
+                      <div key={index} className="flex items-start gap-3 bg-gray-50 p-3 rounded-lg">
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary-orange flex-shrink-0 mt-1.5" />
+                        <span className="text-sm font-normal text-black leading-[1.6]">
+                          {point}
+                        </span>
+                      </div>
                     ))}
                   </div>
-                </button>
-                <span className="text-[11px] font-medium font-sans text-black uppercase tracking-[0.05em] leading-none">
-                  АУДИОГИД
-                </span>
-              </div>
-              <div className="flex items-end gap-10 max-md:w-full max-md:justify-between">
-                <div className="flex flex-col gap-1">
-                  <span className="text-xl font-bold font-sans text-primary-orange leading-none">
-                    {trail.distance}
-                  </span>
-                  <span className="text-[11px] font-medium font-sans text-black uppercase tracking-[0.05em] leading-none">
-                    РАССТОЯНИЕ
-                  </span>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-xl font-bold font-sans text-primary-orange leading-none">
-                    {trail.timing}
-                  </span>
-                  <span className="text-[11px] font-medium font-sans text-black uppercase tracking-[0.05em] leading-none">
-                    ТАЙМИНГ
-                  </span>
+              )}
+
+              {/* Аудиогид */}
+              <div className="mt-4 pt-5 border-t border-gray-200">
+                <div className="flex flex-col gap-3">
+                  <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">Аудиогид</h3>
+                  <button
+                    onClick={handleAudioClick}
+                    disabled={!trail.audioUrl}
+                    className={`flex items-center gap-4 px-8 py-4 bg-gradient-to-r from-primary-orange to-primary-orange-dark text-white rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed ${
+                      isPlaying ? 'shadow-lg scale-[1.02]' : ''
+                    }`}
+                  >
+                    <div className={`w-12 h-12 flex items-center justify-center rounded-full bg-white/20 ${isPlaying ? 'animate-pulse' : ''}`}>
+                      {isPlaying ? (
+                        <svg className="w-6 h-6 text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M6 4H10V20H6V4ZM14 4H18V20H14V4Z" fill="currentColor"/>
+                        </svg>
+                      ) : (
+                        <svg className="w-6 h-6 text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+                        </svg>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-lg font-bold">
+                        {isPlaying ? 'Пауза' : 'Слушать аудиогид'}
+                      </div>
+                      <div className="text-sm opacity-90">
+                        {trail.audioUrl ? 'Прослушайте подробную информацию о маршруте' : 'Аудиогид пока недоступен'}
+                      </div>
+                    </div>
+                    {isPlaying && (
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <div 
+                            key={i}
+                            className="w-1 bg-white rounded-full animate-pulse"
+                            style={{
+                              height: `${8 + i * 3}px`,
+                              animationDelay: `${(i - 1) * 0.1}s`,
+                              animationDuration: '1s'
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
