@@ -261,20 +261,20 @@ export default function CTARandom({ onRandomClick }: CTARandomProps) {
       `}</style>
 
       {/* Нижняя часть - текст и кнопка (контрастный блок) */}
-      <div className="relative z-[10] max-w-[500px] mx-auto text-center -mt-4 pb-8">
-        <div className="relative bg-white rounded-2xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.4)] border-2 border-gray-200">
+      <div className="relative z-[10] max-w-[500px] mx-auto text-center -mt-4 pb-8 max-md:pb-6 max-sm:pb-4 max-md:px-4 max-sm:px-3">
+        <div className="relative bg-white rounded-2xl p-8 max-md:p-6 max-sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.4)] border-2 border-gray-200 max-md:rounded-xl max-sm:rounded-lg">
           {/* Контент */}
           <div className="relative z-10">
-            <h2 className="text-[clamp(24px,3.5vw,32px)] font-extrabold text-gray-900 mb-4 leading-[1.2] tracking-[-0.02em]">
+            <h2 className="text-[clamp(24px,3.5vw,32px)] max-md:text-[clamp(20px,4vw,26px)] max-sm:text-[clamp(18px,4.5vw,22px)] font-extrabold text-gray-900 mb-4 max-sm:mb-3 leading-[1.2] tracking-[-0.02em]">
               Не можешь выбрать?
             </h2>
-            <p className="font-sans text-[clamp(15px,2vw,17px)] font-normal text-gray-700 leading-[1.6] m-0 mb-8">
+            <p className="font-sans text-[clamp(15px,2vw,17px)] max-md:text-[clamp(14px,2.2vw,16px)] max-sm:text-[clamp(13px,2.4vw,15px)] font-normal text-gray-700 leading-[1.6] max-sm:leading-[1.5] m-0 mb-8 max-md:mb-6 max-sm:mb-4">
               Положись на волю судьбы и отправься в особое путешествие.
             </p>
             <button 
               onClick={onRandomClick}
               type="button" 
-              className="inline-block py-4 px-10 font-sans text-[13px] font-bold text-white uppercase tracking-[0.12em] bg-[#5D6A56] border-none rounded-full cursor-pointer transition-all duration-300 hover:bg-[#4d5a48] hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(93,106,86,0.5)]"
+              className="inline-block py-4 px-10 max-md:py-3 max-md:px-8 max-sm:py-2.5 max-sm:px-6 font-sans text-[13px] max-md:text-[12px] max-sm:text-[11px] font-bold text-white uppercase tracking-[0.12em] bg-[#5D6A56] border-none rounded-full max-sm:rounded-lg cursor-pointer transition-all duration-300 hover:bg-[#4d5a48] hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(93,106,86,0.5)] active:scale-[0.98] w-full max-sm:w-full"
             >
               Случайный выбор
             </button>

@@ -52,7 +52,7 @@ export default function ParallaxImage({
   return (
     <div 
       ref={containerRef}
-      className="relative w-full overflow-hidden"
+      className="relative w-full overflow-hidden max-md:h-[400px] max-sm:h-[300px]"
       style={{ height }}
     >
       <div 

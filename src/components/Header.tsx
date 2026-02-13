@@ -188,7 +188,7 @@ export default function Header({ onMapClick, onRoutesClick, onConceptClick }: He
       {isScrolled && (
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#ff8c42]/30 to-transparent opacity-50" />
       )}
-      <nav className="max-w-[1400px] mx-auto px-5 flex items-center justify-between">
+      <nav className="max-w-[1400px] mx-auto px-4 md:px-5 flex items-center justify-between">
         {/* Логотип */}
         <div 
           className="flex items-center cursor-pointer group"
@@ -202,13 +202,13 @@ export default function Header({ onMapClick, onRoutesClick, onConceptClick }: He
             <div className="absolute inset-0 rounded-full border-2 border-transparent group-hover:border-[#ff8c42]/30 group-hover:rotate-180 transition-all duration-700"></div>
             
             {/* Основной круг логотипа */}
-            <div className="relative w-12 h-12 bg-gradient-to-br from-[#ffb84d] via-[#ff8c42] to-[#ff7040] rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-[#ff8c42]/50 transition-all duration-300 overflow-hidden">
+            <div className="relative w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-[#ffb84d] via-[#ff8c42] to-[#ff7040] rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-[#ff8c42]/50 transition-all duration-300 overflow-hidden">
               {/* Блестящий эффект */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               
               {/* Иконка солнца */}
               <svg 
-                className="w-6 h-6 text-white relative z-10 group-hover:rotate-12 transition-transform duration-300" 
+                className="w-5 h-5 md:w-6 md:h-6 text-white relative z-10 group-hover:rotate-12 transition-transform duration-300" 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -223,7 +223,7 @@ export default function Header({ onMapClick, onRoutesClick, onConceptClick }: He
             </div>
           </div>
           <span 
-            className={`ml-3 text-xl font-bold font-display transition-all duration-300 group-hover:tracking-wide ${
+            className={`ml-2 md:ml-3 text-base md:text-xl font-bold font-display transition-all duration-300 group-hover:tracking-wide ${
               isScrolled ? 'text-[#4D5C47]' : 'text-white drop-shadow-lg'
             }`}
           >
@@ -312,12 +312,13 @@ export default function Header({ onMapClick, onRoutesClick, onConceptClick }: He
         {/* Мобильная кнопка меню */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className={`md:hidden p-2 rounded-lg transition-all duration-300 ${
+          className={`md:hidden p-2.5 rounded-lg transition-all duration-300 active:scale-95 ${
             isScrolled
-              ? 'text-[#4D5C47] hover:bg-gray-100'
-              : 'text-white hover:bg-white/20'
+              ? 'text-[#4D5C47] hover:bg-gray-100 active:bg-gray-200'
+              : 'text-white hover:bg-white/20 active:bg-white/30'
           }`}
           aria-label="Меню"
+          aria-expanded={isMobileMenuOpen}
         >
           <svg 
             className="w-6 h-6" 
@@ -329,14 +330,14 @@ export default function Header({ onMapClick, onRoutesClick, onConceptClick }: He
               <path 
                 strokeLinecap="round" 
                 strokeLinejoin="round" 
-                strokeWidth={2} 
+                strokeWidth={2.5} 
                 d="M6 18L18 6M6 6l12 12" 
               />
             ) : (
               <path 
                 strokeLinecap="round" 
                 strokeLinejoin="round" 
-                strokeWidth={2} 
+                strokeWidth={2.5} 
                 d="M4 6h16M4 12h16M4 18h16" 
               />
             )}
@@ -347,27 +348,29 @@ export default function Header({ onMapClick, onRoutesClick, onConceptClick }: He
       {/* Мобильное меню */}
       <div
         ref={mobileMenuRef}
-        className={`md:hidden absolute top-full left-0 right-0 bg-white/98 backdrop-blur-md shadow-xl transition-all duration-500 ease-out overflow-hidden ${
+        className={`md:hidden absolute top-full left-0 right-0 bg-white/98 backdrop-blur-md shadow-xl transition-all duration-500 ease-out overflow-hidden border-t border-gray-200/50 ${
           isMobileMenuOpen 
-            ? 'max-h-96 opacity-100 visible' 
+            ? 'max-h-[500px] opacity-100 visible' 
             : 'max-h-0 opacity-0 invisible'
         }`}
         style={{
           transitionProperty: 'max-height, opacity, visibility',
         }}
       >
-        <div className="px-5 py-4 flex flex-col gap-2">
+        <div className="px-4 md:px-5 py-4 flex flex-col gap-2.5">
           <button
             onClick={() => handleNavClick(onConceptClick, 'concept-section')}
-            className={`relative text-left px-4 py-3 text-[#4D5C47] font-semibold font-display rounded-lg transition-all duration-300 hover:bg-[#ff8c42]/10 hover:text-[#ff8c42] hover:translate-x-2 ${
-              activeSection === 'concept-section' ? 'bg-[#ff8c42]/10 text-[#ff8c42]' : ''
+            className={`relative text-left px-4 py-3.5 text-[#4D5C47] font-semibold font-display rounded-xl transition-all duration-300 active:scale-[0.98] ${
+              activeSection === 'concept-section' 
+                ? 'bg-[#ff8c42]/10 text-[#ff8c42] border-l-4 border-[#ff8c42]' 
+                : 'hover:bg-[#ff8c42]/10 hover:text-[#ff8c42] active:bg-[#ff8c42]/15'
             }`}
             style={{
               animationDelay: isMobileMenuOpen ? '0.1s' : '0s',
               animation: isMobileMenuOpen ? 'slideInRight 0.3s ease-out forwards' : 'none',
             }}
           >
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2.5 text-base">
               О проекте
               {activeSection === 'concept-section' && (
                 <span className="w-2 h-2 rounded-full bg-[#ff8c42] animate-pulse" />
@@ -376,15 +379,17 @@ export default function Header({ onMapClick, onRoutesClick, onConceptClick }: He
           </button>
           <button
             onClick={() => handleNavClick(onMapClick, 'map-section')}
-            className={`relative text-left px-4 py-3 text-[#4D5C47] font-semibold font-display rounded-lg transition-all duration-300 hover:bg-[#ff8c42]/10 hover:text-[#ff8c42] hover:translate-x-2 ${
-              activeSection === 'map-section' ? 'bg-[#ff8c42]/10 text-[#ff8c42]' : ''
+            className={`relative text-left px-4 py-3.5 text-[#4D5C47] font-semibold font-display rounded-xl transition-all duration-300 active:scale-[0.98] ${
+              activeSection === 'map-section' 
+                ? 'bg-[#ff8c42]/10 text-[#ff8c42] border-l-4 border-[#ff8c42]' 
+                : 'hover:bg-[#ff8c42]/10 hover:text-[#ff8c42] active:bg-[#ff8c42]/15'
             }`}
             style={{
               animationDelay: isMobileMenuOpen ? '0.15s' : '0s',
               animation: isMobileMenuOpen ? 'slideInRight 0.3s ease-out forwards' : 'none',
             }}
           >
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2.5 text-base">
               Карта троп
               {activeSection === 'map-section' && (
                 <span className="w-2 h-2 rounded-full bg-[#ff8c42] animate-pulse" />
@@ -393,15 +398,17 @@ export default function Header({ onMapClick, onRoutesClick, onConceptClick }: He
           </button>
           <button
             onClick={() => handleNavClick(onRoutesClick, 'routes-section')}
-            className={`relative text-left px-4 py-3 text-[#4D5C47] font-semibold font-display rounded-lg transition-all duration-300 hover:bg-[#ff8c42]/10 hover:text-[#ff8c42] hover:translate-x-2 ${
-              activeSection === 'routes-section' ? 'bg-[#ff8c42]/10 text-[#ff8c42]' : ''
+            className={`relative text-left px-4 py-3.5 text-[#4D5C47] font-semibold font-display rounded-xl transition-all duration-300 active:scale-[0.98] ${
+              activeSection === 'routes-section' 
+                ? 'bg-[#ff8c42]/10 text-[#ff8c42] border-l-4 border-[#ff8c42]' 
+                : 'hover:bg-[#ff8c42]/10 hover:text-[#ff8c42] active:bg-[#ff8c42]/15'
             }`}
             style={{
               animationDelay: isMobileMenuOpen ? '0.2s' : '0s',
               animation: isMobileMenuOpen ? 'slideInRight 0.3s ease-out forwards' : 'none',
             }}
           >
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2.5 text-base">
               Маршруты
               {activeSection === 'routes-section' && (
                 <span className="w-2 h-2 rounded-full bg-[#ff8c42] animate-pulse" />
@@ -410,7 +417,7 @@ export default function Header({ onMapClick, onRoutesClick, onConceptClick }: He
           </button>
           <button
             onClick={() => handleNavClick(undefined, 'hero')}
-            className="mt-2 px-4 py-3 bg-gradient-to-br from-[#ffb84d] via-[#ff8c42] to-[#ff7040] text-white font-semibold font-display rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden group"
+            className="mt-3 px-5 py-3.5 bg-gradient-to-br from-[#ffb84d] via-[#ff8c42] to-[#ff7040] text-white font-semibold font-display rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 active:scale-[0.97] relative overflow-hidden group text-base"
             style={{
               animationDelay: isMobileMenuOpen ? '0.25s' : '0s',
               animation: isMobileMenuOpen ? 'slideInRight 0.3s ease-out forwards' : 'none',

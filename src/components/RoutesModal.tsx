@@ -78,7 +78,7 @@ export default function RoutesModal({ isOpen, onClose, routes, onTrailClick, fil
         }}
       />
       <div 
-        className="relative z-[2] w-[90%] max-w-[1400px] h-[85vh] max-h-[85vh] overflow-hidden scale-100 translate-y-0 blur-0 opacity-100 transition-all duration-500 rounded-3xl"
+        className="relative z-[2] w-[90%] max-w-[1400px] h-[85vh] max-h-[85vh] overflow-hidden scale-100 translate-y-0 blur-0 opacity-100 transition-all duration-500 rounded-3xl max-md:w-[95%] max-md:h-[90vh] max-md:max-h-[90vh] max-md:rounded-2xl max-sm:w-[98%] max-sm:h-[95vh] max-sm:max-h-[95vh] max-sm:rounded-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button 
@@ -93,11 +93,11 @@ export default function RoutesModal({ isOpen, onClose, routes, onTrailClick, fil
         
         <div className="bg-white rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.4)] h-full flex flex-col">
           {/* Заголовок */}
-          <div className="px-8 py-6 border-b border-gray-200 bg-gradient-to-r from-[#4D5C47] to-[#556350]">
-            <h2 className="text-[clamp(28px,4vw,40px)] font-extrabold text-white mb-2 leading-[1.2] tracking-[-0.02em]">
+          <div className="px-8 py-6 max-md:px-6 max-md:py-5 max-sm:px-4 max-sm:py-4 border-b border-gray-200 bg-gradient-to-r from-[#4D5C47] to-[#556350]">
+            <h2 className="text-[clamp(28px,4vw,40px)] max-md:text-[clamp(24px,5vw,32px)] max-sm:text-[clamp(20px,5.5vw,26px)] font-extrabold text-white mb-2 max-sm:mb-1.5 leading-[1.2] tracking-[-0.02em]">
               {filterType ? 'Маршруты по выбранному чувству' : 'Все маршруты'}
             </h2>
-            <p className="text-white/90 text-lg">
+            <p className="text-white/90 text-lg max-md:text-base max-sm:text-sm">
               {filteredRoutes.length > 0 
                 ? `Найдено маршрутов: ${filteredRoutes.length}` 
                 : 'Маршруты не найдены'}
@@ -105,13 +105,13 @@ export default function RoutesModal({ isOpen, onClose, routes, onTrailClick, fil
           </div>
 
           {/* Контент с карточками маршрутов */}
-          <div className="flex-1 overflow-y-auto p-8">
+          <div className="flex-1 overflow-y-auto p-8 max-md:p-6 max-sm:p-4">
             {filteredRoutes.length === 0 ? (
               <div className="flex items-center justify-center h-full">
-                <p className="text-gray-500 text-xl">Маршруты не найдены</p>
+                <p className="text-gray-500 text-xl max-md:text-lg max-sm:text-base">Маршруты не найдены</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-md:gap-4 max-sm:gap-3">
                 {filteredRoutes.map((route, index) => (
                 <article
                   key={index}
@@ -122,7 +122,7 @@ export default function RoutesModal({ isOpen, onClose, routes, onTrailClick, fil
                   className="bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 cursor-pointer group hover:-translate-y-2 hover:shadow-2xl border border-gray-100"
                 >
                   {/* Изображение маршрута */}
-                  <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+                  <div className="relative h-48 max-md:h-40 max-sm:h-36 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                     <img 
                       src={getAssetPath(route.image)} 
                       alt={route.name} 
@@ -151,21 +151,21 @@ export default function RoutesModal({ isOpen, onClose, routes, onTrailClick, fil
                   </div>
 
                   {/* Контент карточки */}
-                  <div className="p-5">
-                    <h3 className="text-xl font-bold text-[#1a1a1a] mb-2 leading-[1.3] tracking-[-0.02em] group-hover:text-primary-orange transition-colors duration-300">
+                  <div className="p-5 max-md:p-4 max-sm:p-3">
+                    <h3 className="text-xl max-md:text-lg max-sm:text-base font-bold text-[#1a1a1a] mb-2 max-sm:mb-1.5 leading-[1.3] tracking-[-0.02em] group-hover:text-primary-orange transition-colors duration-300">
                       {route.name}
                     </h3>
                     {route.subtitle && (
-                      <p className="text-base text-primary-orange font-semibold mb-3">
+                      <p className="text-base max-md:text-sm max-sm:text-xs text-primary-orange font-semibold mb-3 max-sm:mb-2">
                         {route.subtitle}
                       </p>
                     )}
-                    <p className="text-sm font-normal text-[#666666] leading-[1.6] mb-4 line-clamp-3">
+                    <p className="text-sm max-md:text-xs max-sm:text-[11px] font-normal text-[#666666] leading-[1.6] max-sm:leading-[1.5] mb-4 max-sm:mb-3 line-clamp-3">
                       {route.description}
                     </p>
 
                     {/* Информация о маршруте */}
-                    <div className="flex gap-4 pt-4 border-t border-gray-100">
+                    <div className="flex gap-4 max-md:gap-3 max-sm:gap-2 pt-4 max-sm:pt-3 border-t border-gray-100">
                       {route.distance && (
                         <div className="flex items-center gap-2">
                           <svg className="w-4 h-4 text-primary-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">

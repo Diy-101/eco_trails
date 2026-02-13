@@ -597,17 +597,81 @@
 
 /* Leaflet карта адаптивность */
 @media (max-width: 768px) {
-  .leaflet-container {
-    min-height: 60vh !important;
-    transform: scale(0.7) !important;
-    margin-top: -30vh !important;
+  .map-container-custom .leaflet-container {
+    min-height: 50vh !important;
+    height: 50vh !important;
+  }
+  
+  .map-container-custom .leaflet-control-zoom {
+    transform: scale(0.9);
+  }
+  
+  .map-container-custom .leaflet-control-zoom a {
+    font-size: 16px;
+    line-height: 28px;
   }
 }
 
 @media (max-width: 480px) {
-  .leaflet-container {
+  .map-container-custom .leaflet-container {
+    min-height: 45vh !important;
+    height: 45vh !important;
+  }
+  
+  .map-container-custom .leaflet-control-zoom {
+    transform: scale(0.85);
+  }
+  
+  .map-container-custom .leaflet-control-zoom a {
+    font-size: 14px;
+    line-height: 24px;
+    padding: 4px 8px;
+  }
+  
+  .ticket-popup {
+    min-width: 280px !important;
+    max-width: 320px !important;
+    height: 180px !important;
+  }
+  
+  .ticket-image-wrapper {
+    width: 120px !important;
+    min-width: 120px !important;
+    height: 180px !important;
+  }
+  
+  .ticket-content {
+    padding: 12px 14px !important;
+  }
+  
+  .ticket-title {
+    font-size: 16px !important;
+  }
+  
+  .ticket-detail-value {
+    font-size: 9px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .map-container-custom .leaflet-container {
     min-height: 40vh !important;
-    transform: scale(0.55) !important;
-    margin-top: -20vh !important;
+    height: 40vh !important;
+  }
+  
+  .map-container-custom .leaflet-control-zoom {
+    transform: scale(0.8);
+  }
+  
+  .ticket-popup {
+    min-width: 260px !important;
+    max-width: 300px !important;
+    height: 160px !important;
+  }
+  
+  .ticket-image-wrapper {
+    width: 100px !important;
+    min-width: 100px !important;
+    height: 160px !important;
   }
 }

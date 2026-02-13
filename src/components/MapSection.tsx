@@ -451,7 +451,7 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
   }
 
   return (
-    <section id="map-section" className="relative py-12 px-4 bg-gradient-to-b from-[#2a3528] via-[#4D5C47] to-[#2a3528] overflow-visible">
+    <section id="map-section" className="relative py-12 px-4 bg-gradient-to-b from-[#2a3528] via-[#4D5C47] to-[#2a3528] overflow-visible max-md:py-8 max-md:px-3 max-sm:py-6 max-sm:px-2">
       {/* Анимированные декоративные элементы */}
       <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
         <div className="absolute top-20 right-20 w-96 h-96 bg-primary-orange rounded-full blur-3xl animate-pulse"></div>
@@ -461,30 +461,30 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
 
       <div className="max-w-[1600px] mx-auto relative z-[1]">
         {/* Заголовок с улучшенным дизайном */}
-        <div className="text-center mb-8">
-          <h2 className="text-[clamp(32px,5vw,56px)] font-extrabold text-white mb-3 tracking-[-0.03em] relative inline-block">
+        <div className="text-center mb-8 max-md:mb-6 max-sm:mb-4">
+          <h2 className="text-[clamp(32px,5vw,56px)] font-extrabold text-white mb-3 tracking-[-0.03em] relative inline-block max-md:mb-2 max-md:text-[clamp(28px,6vw,40px)] max-sm:text-[clamp(24px,6.5vw,32px)]">
             <span className="relative z-10">Карта</span>{' '}
             <span className="relative z-10 bg-gradient-to-r from-primary-orange-light via-primary-orange to-primary-orange-dark bg-clip-text text-transparent">
               троп
             </span>
-            <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary-orange to-transparent opacity-50"></div>
+            <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary-orange to-transparent opacity-50 max-sm:h-0.5"></div>
           </h2>
-          <p className="text-white/80 text-lg max-w-2xl mx-auto">
+          <p className="text-white/80 text-lg max-w-2xl mx-auto max-md:text-base max-sm:text-sm max-sm:px-2">
             Найдите идеальный маршрут для вашего путешествия
           </p>
         </div>
         
         {/* Улучшенная панель фильтров */}
-        <div className="flex flex-col items-center gap-4 mb-8 max-w-7xl mx-auto" ref={filterRef}>
+        <div className="flex flex-col items-center gap-4 mb-8 max-w-7xl mx-auto max-md:gap-3 max-md:mb-6 max-sm:gap-2 max-sm:mb-4" ref={filterRef}>
           {/* Основная кнопка фильтров */}
-          <div className="flex items-center gap-4 flex-wrap justify-center">
+          <div className="flex items-center gap-4 flex-wrap justify-center max-md:gap-3 max-sm:gap-2 max-sm:flex-col max-sm:w-full">
             <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
               className={`
-                group flex items-center gap-3 px-6 py-3.5 text-sm font-bold rounded-2xl cursor-pointer transition-all duration-300 relative z-10
+                group flex items-center gap-3 px-6 py-3.5 text-sm font-bold rounded-2xl cursor-pointer transition-all duration-300 relative z-10 max-md:px-5 max-md:py-3 max-md:text-[13px] max-sm:px-4 max-sm:py-2.5 max-sm:text-xs max-sm:w-full max-sm:justify-center max-sm:rounded-xl
                 ${isFilterOpen || activeFiltersCount > 0
-                  ? 'bg-gradient-to-r from-primary-orange to-primary-orange-dark text-white shadow-xl shadow-primary-orange/40 scale-105'
-                  : 'bg-white/95 text-primary-orange border-2 border-primary-orange hover:bg-gradient-to-r hover:from-primary-orange hover:to-primary-orange-dark hover:text-white hover:scale-105 hover:shadow-lg'
+                  ? 'bg-gradient-to-r from-primary-orange to-primary-orange-dark text-white shadow-xl shadow-primary-orange/40 scale-105 max-sm:scale-100'
+                  : 'bg-white/95 text-primary-orange border-2 border-primary-orange hover:bg-gradient-to-r hover:from-primary-orange hover:to-primary-orange-dark hover:text-white hover:scale-105 hover:shadow-lg max-sm:hover:scale-100'
                 }
               `}
             >
@@ -508,7 +508,7 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
             </button>
 
             {/* Быстрые фильтры по чувствам */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 max-md:gap-1.5 max-sm:gap-1 max-sm:w-full max-sm:justify-center">
               {feelingFilters.map((option) => {
                 const isActive = filters.feeling === option.filter
                 return (
@@ -516,10 +516,10 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
                   key={option.filter}
                   onClick={() => handleQuickFilter(option.filter)}
                     className={`
-                      group flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 backdrop-blur-sm border active:scale-95
+                      group flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 backdrop-blur-sm border active:scale-95 max-md:px-3 max-md:py-2 max-md:text-[11px] max-sm:px-2.5 max-sm:py-1.5 max-sm:text-[10px] max-sm:rounded-lg max-sm:flex-1 max-sm:justify-center max-sm:min-w-0
                       ${isActive
-                        ? 'bg-gradient-to-r from-primary-orange-dark to-primary-orange text-white border-white/40 shadow-lg scale-105'
-                        : 'bg-gradient-to-r from-primary-orange to-primary-orange-dark text-white border-white/20 hover:border-white/40 hover:scale-110 hover:shadow-lg'
+                        ? 'bg-gradient-to-r from-primary-orange-dark to-primary-orange text-white border-white/40 shadow-lg scale-105 max-sm:scale-100'
+                        : 'bg-gradient-to-r from-primary-orange to-primary-orange-dark text-white border-white/20 hover:border-white/40 hover:scale-110 hover:shadow-lg max-sm:hover:scale-100'
                       }
                     `}
                 >
@@ -538,8 +538,8 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
 
           {/* Расширенная панель фильтров с улучшенным дизайном */}
           {isFilterOpen && (
-            <div className="w-full mt-2 bg-white/98 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/30 animate-fadeInUp">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="w-full mt-2 bg-white/98 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/30 animate-fadeInUp max-md:p-6 max-md:rounded-2xl max-sm:p-4 max-sm:rounded-xl max-sm:mt-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-md:gap-4 max-sm:gap-3">
                 {/* Фильтр по чувствам */}
                 <div className="space-y-3">
                   <h3 className="text-sm font-bold text-gray-800 mb-4 uppercase tracking-wider flex items-center gap-2 text-primary-orange">
@@ -692,9 +692,9 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
         </div>
         
         {/* Переделанная карта с интересным дизайном */}
-        <div className="relative w-full mx-auto max-w-5xl">
+        <div className="relative w-full mx-auto max-w-5xl max-md:max-w-full">
           {/* Внешний контейнер с эффектами */}
-          <div className="relative w-full h-[60vh] min-h-[500px] group">
+          <div className="relative w-full h-[60vh] min-h-[500px] max-md:h-[50vh] max-md:min-h-[400px] max-sm:h-[45vh] max-sm:min-h-[350px] group">
             {/* Декоративные градиенты вокруг карты */}
             <div className="absolute -inset-4 bg-gradient-to-br from-primary-orange/20 via-primary-orange-light/10 to-transparent rounded-[3rem] blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
             <div className="absolute -inset-2 bg-gradient-to-tr from-[#4D5C47]/30 via-transparent to-[#556350]/20 rounded-[2.5rem] blur-xl"></div>

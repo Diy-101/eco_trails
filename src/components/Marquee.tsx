@@ -11,16 +11,16 @@ export default function Marquee() {
   ]
 
   return (
-    <section className="relative w-full bg-gradient-to-r from-primary-orange via-primary-orange-light to-primary-orange overflow-hidden py-3 border-y-2 border-primary-orange-dark/30">
+    <section className="relative w-full bg-gradient-to-r from-primary-orange via-primary-orange-light to-primary-orange overflow-hidden py-3 max-md:py-2.5 max-sm:py-2 border-y-2 border-primary-orange-dark/30">
       <div className="flex animate-marquee whitespace-nowrap">
         {[...items, ...items, ...items].map((item, index) => (
           <div
             key={index}
-            className="inline-flex items-center gap-4 px-8 text-white font-bold text-base uppercase tracking-wider"
+            className="inline-flex items-center gap-4 px-8 max-md:gap-3 max-md:px-6 max-sm:gap-2 max-sm:px-4 text-white font-bold text-base max-md:text-sm max-sm:text-xs uppercase tracking-wider"
           >
-            <span className="text-xl flex-shrink-0">{item.icon}</span>
+            <span className="text-xl max-md:text-lg max-sm:text-base flex-shrink-0">{item.icon}</span>
             <span>{item.text}</span>
-            <span className="text-xl flex-shrink-0">✦</span>
+            <span className="text-xl max-md:text-lg max-sm:text-base flex-shrink-0">✦</span>
           </div>
         ))}
       </div>

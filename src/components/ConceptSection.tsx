@@ -35,7 +35,7 @@ export default function ConceptSection({ onCardClick }: ConceptSectionProps) {
     <section 
       id="concept-section"
       ref={sectionRef}
-      className="relative py-[100px] px-10 bg-gradient-to-b from-[#4D5C47] via-[#556350] to-[#4D5C47] overflow-hidden"
+      className="relative py-[100px] px-10 bg-gradient-to-b from-[#4D5C47] via-[#556350] to-[#4D5C47] overflow-hidden max-md:py-[60px] max-md:px-6 max-sm:py-[50px] max-sm:px-4"
     >
       {/* Декоративные элементы фона */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
@@ -46,21 +46,21 @@ export default function ConceptSection({ onCardClick }: ConceptSectionProps) {
 
       <div className="max-w-[1400px] mx-auto relative z-10">
         {/* Заголовок секции */}
-        <div className="text-center mb-16">
-          <h2 className="text-[clamp(36px,5.5vw,64px)] font-extrabold text-white mb-4 leading-[1.15] tracking-[-0.03em]">
+        <div className="text-center mb-16 max-md:mb-12 max-sm:mb-10">
+          <h2 className="text-[clamp(36px,5.5vw,64px)] font-extrabold text-white mb-4 leading-[1.15] tracking-[-0.03em] max-md:mb-3 max-md:text-[clamp(28px,6vw,40px)] max-sm:mb-2 max-sm:text-[clamp(24px,6.5vw,32px)]">
             Пусть маршрут точно придется тебе{' '}
             <span className="text-primary-orange font-extrabold bg-gradient-to-r from-primary-orange-light via-primary-orange to-primary-orange-dark bg-clip-text text-transparent">
               по вкусу
             </span>
           </h2>
-          <p className="text-[clamp(18px,2.2vw,22px)] font-normal text-white/90 max-w-3xl mx-auto leading-[1.6] tracking-[-0.01em]">
+          <p className="text-[clamp(18px,2.2vw,22px)] font-normal text-white/90 max-w-3xl mx-auto leading-[1.6] tracking-[-0.01em] max-md:text-[clamp(16px,2.5vw,18px)] max-md:leading-[1.5] max-sm:text-[clamp(14px,2.2vw,16px)] max-sm:px-2">
             Мы сделали так, чтобы ты мог выбрать ту экотропу, которая подарит тебе{' '}
             <span className="text-primary-orange font-medium">нужные эмоции</span>
           </p>
         </div>
         
         {/* Карточки в улучшенной сетке */}
-        <div className="grid grid-cols-5 gap-6 max-xl:grid-cols-3 max-lg:grid-cols-2 max-md:grid-cols-1">
+        <div className="grid grid-cols-5 gap-6 max-xl:grid-cols-3 max-lg:grid-cols-2 max-md:grid-cols-1 max-md:gap-4 max-sm:gap-3">
           {conceptCards.map((card, index) => {
             // Маппинг между названиями карточек и типами фильтров
             const getFilterType = (title: string): 'look' | 'listen' | 'taste' | 'touch' | 'feel' | null => {
@@ -93,21 +93,21 @@ export default function ConceptSection({ onCardClick }: ConceptSectionProps) {
               }}
             >
               {/* Градиентный фон сверху с иконкой */}
-              <div className="relative h-40 bg-gradient-to-br from-primary-orange via-primary-orange-light to-primary-orange-dark overflow-hidden">
+              <div className="relative h-40 max-md:h-32 max-sm:h-28 bg-gradient-to-br from-primary-orange via-primary-orange-light to-primary-orange-dark overflow-hidden">
                 {/* Анимированный фон */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 
                 {/* Иконка в центре */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className={`
-                    w-24 h-24 rounded-full bg-white/25 backdrop-blur-md flex items-center justify-center shadow-2xl
+                    w-24 h-24 max-md:w-20 max-md:h-20 max-sm:w-16 max-sm:h-16 rounded-full bg-white/25 backdrop-blur-md flex items-center justify-center shadow-2xl
                     transition-all duration-500 border-2 border-white/30
                     ${hoveredIndex === index ? 'scale-125 rotate-[15deg] shadow-primary-orange/50' : 'scale-100 rotate-0'}
                   `}>
                     <img 
                       src={getAssetPath(card.icon)} 
                       alt={card.title} 
-                      className="w-14 h-14 object-contain brightness-0 invert drop-shadow-lg transition-transform duration-500 group-hover:scale-110"
+                      className="w-14 h-14 max-md:w-12 max-md:h-12 max-sm:w-10 max-sm:h-10 object-contain brightness-0 invert drop-shadow-lg transition-transform duration-500 group-hover:scale-110"
                     />
                   </div>
                 </div>
@@ -121,15 +121,15 @@ export default function ConceptSection({ onCardClick }: ConceptSectionProps) {
               </div>
 
               {/* Контент карточки */}
-              <div className="p-6 relative">
+              <div className="p-6 max-md:p-5 max-sm:p-4 relative">
                 {/* Декоративная линия сверху */}
-                <div className="absolute top-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-primary-orange/30 to-transparent"></div>
+                <div className="absolute top-0 left-6 right-6 max-md:left-5 max-md:right-5 max-sm:left-4 max-sm:right-4 h-0.5 bg-gradient-to-r from-transparent via-primary-orange/30 to-transparent"></div>
                 
-                <h3 className="text-2xl font-bold text-[#1a1a1a] m-0 mb-3 tracking-[-0.02em] leading-[1.2] transition-colors duration-300 group-hover:text-primary-orange">
+                <h3 className="text-2xl max-md:text-xl max-sm:text-lg font-bold text-[#1a1a1a] m-0 mb-3 max-md:mb-2 max-sm:mb-1.5 tracking-[-0.02em] leading-[1.2] transition-colors duration-300 group-hover:text-primary-orange">
                   {card.title}
                 </h3>
                 
-                <p className="text-sm font-normal text-[#666666] leading-[1.65] m-0">
+                <p className="text-sm max-md:text-[13px] max-sm:text-xs font-normal text-[#666666] leading-[1.65] max-md:leading-[1.5] m-0">
                   {card.description}
                 </p>
 
