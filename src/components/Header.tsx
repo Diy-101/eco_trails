@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { getAssetPath } from '../utils/paths'
 
 interface HeaderProps {
   onMapClick?: () => void
