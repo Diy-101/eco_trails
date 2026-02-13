@@ -140,11 +140,11 @@ export default function RoutesModal({ isOpen, onClose, routes, onTrailClick, fil
                     {route.filterType && (
                       <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
                         <span className="text-xs font-semibold text-primary-orange uppercase tracking-wide">
-                          {route.filterType === 'look' && 'Увидь'}
-                          {route.filterType === 'listen' && 'Услышь'}
+                          {route.filterType === 'look' && 'Посмотри'}
+                          {route.filterType === 'listen' && 'Послушай'}
                           {route.filterType === 'taste' && 'Попробуй'}
-                          {route.filterType === 'touch' && 'Потрогай'}
-                          {route.filterType === 'feel' && 'Ощути'}
+                          {route.filterType === 'touch' && 'Прикоснись'}
+                          {route.filterType === 'feel' && 'Почувствуй'}
                         </span>
                       </div>
                     )}

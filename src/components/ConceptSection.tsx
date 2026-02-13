@@ -65,10 +65,10 @@ export default function ConceptSection({ onCardClick }: ConceptSectionProps) {
             // Маппинг между названиями карточек и типами фильтров
             const getFilterType = (title: string): 'look' | 'listen' | 'taste' | 'touch' | 'feel' | null => {
               const mapping: Record<string, 'look' | 'listen' | 'taste' | 'touch' | 'feel'> = {
-                'Увидь': 'look',
-                'Прислушайся': 'listen',
+                'Посмотри': 'look',
+                'Послушай': 'listen',
                 'Попробуй': 'taste',
-                'Потрогай': 'touch',
+                'Прикоснись': 'touch',
                 'Почувствуй': 'feel'
               }
               return mapping[title] || null
@@ -129,9 +129,15 @@ export default function ConceptSection({ onCardClick }: ConceptSectionProps) {
                   {card.title}
                 </h3>
                 
-                <p className="text-sm max-md:text-[13px] max-sm:text-xs font-normal text-[#666666] leading-[1.65] max-md:leading-[1.5] m-0 text-center">
+                <p className="text-sm max-md:text-[13px] max-sm:text-xs font-normal text-[#666666] leading-[1.65] max-md:leading-[1.5] m-0 text-center mb-2">
                   {card.description}
                 </p>
+
+                {card.location && (
+                  <p className="text-xs max-md:text-[11px] max-sm:text-[10px] font-medium text-primary-orange leading-[1.4] m-0 text-center italic">
+                    {card.location}
+                  </p>
+                )}
 
                 {/* Декоративный элемент внизу */}
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary-orange/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>

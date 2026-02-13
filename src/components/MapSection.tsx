@@ -333,8 +333,8 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
   const filterRef = useRef<HTMLDivElement>(null)
 
   const feelingFilters = [
-    { filter: 'look', icon: 'увидь.png', text: 'Присмотрись' },
-    { filter: 'listen', icon: 'услышь.png', text: 'Прислушайся' },
+    { filter: 'look', icon: 'увидь.png', text: 'Посмотри' },
+    { filter: 'listen', icon: 'услышь.png', text: 'Послушай' },
     { filter: 'taste', icon: 'попробуй.png', text: 'Попробуй' },
     { filter: 'touch', icon: 'потрогай.png', text: 'Прикоснись' },
     { filter: 'feel', icon: 'ощути.png', text: 'Почувствуй' },

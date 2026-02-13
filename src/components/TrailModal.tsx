@@ -37,8 +37,10 @@ export default function TrailModal({ trail, isOpen, onClose }: TrailModalProps) 
     } else {
       document.body.style.overflow = ''
       document.documentElement.style.overflow = ''
+      // Останавливаем и очищаем аудио при закрытии модального окна
       if (audioRef.current) {
         audioRef.current.pause()
+        audioRef.current.currentTime = 0
         audioRef.current = null
         setIsPlaying(false)
       }
@@ -49,10 +51,21 @@ export default function TrailModal({ trail, isOpen, onClose }: TrailModalProps) 
       document.documentElement.style.overflow = ''
       if (audioRef.current) {
         audioRef.current.pause()
+        audioRef.current.currentTime = 0
         audioRef.current = null
       }
     }
   }, [isOpen])
+
+  // Останавливаем аудио при смене маршрута
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      audioRef.current = null
+      setIsPlaying(false)
+    }
+  }, [trail?.name])
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -66,26 +79,100 @@ export default function TrailModal({ trail, isOpen, onClose }: TrailModalProps) 
   }, [isOpen, onClose])
 
   const handleAudioClick = () => {
-    if (!trail?.audioUrl) return
+    if (!trail?.audioUrl) {
+      console.warn('Аудио URL не указан для маршрута:', trail?.name)
+      return
+    }
 
-    if (audioRef.current && !audioRef.current.paused) {
-      audioRef.current.pause()
-      setIsPlaying(false)
+    // Если аудио уже существует
+    if (audioRef.current) {
+      if (!audioRef.current.paused) {
+        // Если играет - ставим на паузу
+        audioRef.current.pause()
+        setIsPlaying(false)
+      } else {
+        // Если на паузе - возобновляем воспроизведение
+        audioRef.current.play().catch((error) => {
+          console.error('Ошибка воспроизведения аудио:', error)
+          setIsPlaying(false)
+        })
+        setIsPlaying(true)
+      }
     } else {
-      const audio = new Audio(trail.audioUrl)
+      // Создаем новое аудио
+      // Используем тот же подход, что и для изображений - getAssetPath
+      // Но для аудио с кириллицей нужно использовать fetch + blob URL
+      const audioPath = getAssetPath(trail.audioUrl)
+      
+      console.log('Загрузка аудио:', {
+        originalUrl: trail.audioUrl,
+        resolvedPath: audioPath,
+        trailName: trail.name
+      })
+      
+      // Теперь файлы с английскими именами, можно использовать напрямую
+      const audio = new Audio(audioPath)
       audioRef.current = audio
+      
+      // Предзагрузка аудио
+      audio.preload = 'auto'
+      
+      // Обработчики событий
+      const handleLoadedData = () => {
+        console.log('Аудио загружено успешно:', audioPath)
+      }
+      
+      const handleCanPlay = () => {
+        console.log('Аудио готово к воспроизведению:', audioPath)
+      }
+      
+      const handleEnded = () => {
+        console.log('Воспроизведение завершено:', audioPath)
+        setIsPlaying(false)
+        audioRef.current = null
+      }
+      
+      const handlePause = () => {
+        setIsPlaying(false)
+      }
+      
+      const handlePlay = () => {
+        setIsPlaying(true)
+      }
+      
+      const handleError = (e: Event) => {
+        const error = audio.error
+        console.error('Ошибка загрузки аудио:', {
+          path: audioPath,
+          errorCode: error?.code,
+          errorMessage: error?.message,
+          networkState: audio.networkState,
+          readyState: audio.readyState
+        })
+        setIsPlaying(false)
+        audioRef.current = null
+      }
+      
+      audio.addEventListener('loadeddata', handleLoadedData)
+      audio.addEventListener('canplay', handleCanPlay)
+      audio.addEventListener('ended', handleEnded)
+      audio.addEventListener('pause', handlePause)
+      audio.addEventListener('play', handlePlay)
+      audio.addEventListener('error', handleError)
+      
+      // Начинаем воспроизведение
       audio.play()
-      setIsPlaying(true)
-      
-      audio.addEventListener('ended', () => {
-        audioRef.current = null
-        setIsPlaying(false)
-      })
-      
-      audio.addEventListener('error', () => {
-        audioRef.current = null
-        setIsPlaying(false)
-      })
+        .then(() => {
+          setIsPlaying(true)
+        })
+        .catch((error) => {
+          console.error('Ошибка воспроизведения аудио:', {
+            path: audioPath,
+            error: error.message || error
+          })
+          setIsPlaying(false)
+          audioRef.current = null
+        })
     }
   }
 
@@ -288,20 +375,57 @@ export default function TrailModal({ trail, isOpen, onClose }: TrailModalProps) 
                   <button
                     onClick={handleAudioClick}
                     disabled={!trail.audioUrl}
-                    className={`flex items-center gap-4 px-8 py-4 max-md:px-6 max-md:py-3 max-sm:px-4 max-sm:py-2.5 bg-gradient-to-r from-primary-orange to-primary-orange-dark text-white rounded-xl max-sm:rounded-lg cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed ${
-                      isPlaying ? 'shadow-lg scale-[1.02]' : ''
-                    }`}
+                    className="flex items-center gap-4 px-8 py-4 max-md:px-6 max-md:py-3 max-sm:px-4 max-sm:py-2.5 bg-gradient-to-r from-primary-orange to-primary-orange-dark text-white rounded-xl max-sm:rounded-lg cursor-pointer transition-opacity duration-150 hover:shadow-lg active:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ 
+                      minHeight: '80px',
+                      outline: 'none',
+                      border: 'none',
+                      WebkitTapHighlightColor: 'transparent',
+                      WebkitUserSelect: 'none',
+                      userSelect: 'none',
+                      transform: 'none',
+                      willChange: 'opacity'
+                    }}
+                    onMouseDown={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                    }}
                   >
-                    <div className={`w-12 h-12 flex items-center justify-center rounded-full bg-white/20 ${isPlaying ? 'animate-pulse' : ''}`}>
-                      {isPlaying ? (
-                        <svg className="w-6 h-6 text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M6 4H10V20H6V4ZM14 4H18V20H14V4Z" fill="currentColor"/>
-                        </svg>
-                      ) : (
-                        <svg className="w-6 h-6 text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
-                        </svg>
-                      )}
+                    <div 
+                      className="flex-shrink-0 rounded-full bg-white/20"
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        flexShrink: 0
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          width: '24px',
+                          height: '24px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                      >
+                        {isPlaying ? (
+                          <svg className="w-6 h-6 text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', flexShrink: 0 }}>
+                            <path d="M6 4H10V20H6V4ZM14 4H18V20H14V4Z" fill="currentColor"/>
+                          </svg>
+                        ) : (
+                          <svg className="w-6 h-6 text-white" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', flexShrink: 0 }}>
+                            <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+                          </svg>
+                        )}
+                      </div>
                     </div>
                     <div className="flex-1">
                       <div className="text-lg font-bold">

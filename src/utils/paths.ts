@@ -15,5 +15,6 @@ export const getAssetPath = (path: string): string => {
   const normalizedBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
   
   // Возвращаем путь с base URL
+  // Vite автоматически обрабатывает файлы из public, поэтому не нужно кодировать путь
   return `${normalizedBase}/${cleanPath}`
 }

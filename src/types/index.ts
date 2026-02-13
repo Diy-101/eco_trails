@@ -21,4 +21,5 @@ export interface ConceptCard {
   title: string;
   description: string;
   icon: string;
+  location?: string;
 }
