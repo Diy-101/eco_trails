@@ -108,11 +108,11 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
   const filterRef = useRef<HTMLDivElement>(null)
 
   const feelingFilters = [
-    { filter: 'look', icon: 'увидь.png', text: 'Присмотрись', color: 'from-blue-500 to-cyan-500' },
-    { filter: 'listen', icon: 'услышь.png', text: 'Прислушайся', color: 'from-purple-500 to-pink-500' },
-    { filter: 'taste', icon: 'попробуй.png', text: 'Попробуй', color: 'from-orange-500 to-red-500' },
-    { filter: 'touch', icon: 'потрогай.png', text: 'Прикоснись', color: 'from-green-500 to-emerald-500' },
-    { filter: 'feel', icon: 'ощути.png', text: 'Почувствуй', color: 'from-yellow-500 to-amber-500' },
+    { filter: 'look', icon: 'увидь.png', text: 'Присмотрись' },
+    { filter: 'listen', icon: 'услышь.png', text: 'Прислушайся' },
+    { filter: 'taste', icon: 'попробуй.png', text: 'Попробуй' },
+    { filter: 'touch', icon: 'потрогай.png', text: 'Прикоснись' },
+    { filter: 'feel', icon: 'ощути.png', text: 'Почувствуй' },
   ]
 
   const ageFilters = [
@@ -272,17 +272,13 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
               </svg>
             </button>
 
-            {/* Быстрые фильтры по чувствам с градиентами */}
+            {/* Быстрые фильтры по чувствам */}
             <div className="flex flex-wrap gap-2">
               {feelingFilters.map((option) => (
                 <button
                   key={option.filter}
                   onClick={() => handleQuickFilter(option.filter)}
-                  className={`
-                    group flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r ${option.color} rounded-xl text-white text-xs font-bold
-                    hover:scale-110 hover:shadow-lg transition-all duration-300 backdrop-blur-sm border border-white/20
-                    hover:border-white/40 active:scale-95
-                  `}
+                  className="group flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary-orange to-primary-orange-dark rounded-xl text-white text-xs font-bold hover:scale-110 hover:shadow-lg transition-all duration-300 backdrop-blur-sm border border-white/20 hover:border-white/40 active:scale-95"
                 >
                   <img src={option.icon} alt="" className="w-5 h-5 object-contain brightness-0 invert transition-transform group-hover:rotate-12 duration-300" />
                   <span>{option.text}</span>
@@ -308,7 +304,7 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
                         className={`
                           w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300
                           ${filters.feeling === option.filter
-                            ? `bg-gradient-to-r ${option.color} text-white shadow-lg scale-105`
+                            ? 'bg-gradient-to-r from-primary-orange to-primary-orange-dark text-white shadow-lg scale-105'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-102'
                           }
                         `}
@@ -447,29 +443,29 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
         </div>
         
         {/* Улучшенная карта с новым стилем */}
-        <div className="relative w-full mx-auto">
-          <div className="relative w-full min-h-[75vh] bg-gradient-to-br from-[#e8f5e9] to-[#c8e6c9] overflow-visible shadow-[0_0_80px_rgba(140,180,130,1),0_0_120px_rgba(120,160,110,0.9),0_0_160px_rgba(100,140,90,0.7),0_25px_80px_rgba(0,0,0,0.3)] translate-z-0 will-change-transform backface-hidden rounded-[2rem] overflow-hidden border-4 border-white/20"
-               style={{
-                 WebkitMaskImage: "url('маска карты.svg')",
-                 WebkitMaskSize: "100% 100%",
-                 WebkitMaskRepeat: "no-repeat",
-                 WebkitMaskPosition: "center",
-                 maskImage: "url('маска карты.svg')",
-                 maskSize: "100% 100%",
-                 maskRepeat: "no-repeat",
-                 maskPosition: "center"
-               }}>
+        <div className="relative w-full mx-auto max-w-7xl">
+          <div className="relative w-full min-h-[80vh] bg-gradient-to-br from-[#f0f8f0] via-[#e8f5e9] to-[#d4edda] rounded-[2.5rem] overflow-hidden shadow-[0_20px_100px_rgba(0,0,0,0.15),0_0_60px_rgba(77,92,71,0.2),inset_0_1px_0_rgba(255,255,255,0.5)] border-4 border-white/30 backdrop-blur-sm">
+            {/* Декоративные элементы на карте */}
+            <div className="absolute inset-0 pointer-events-none z-[2]">
+              <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white/20 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white/20 to-transparent"></div>
+              <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-white/20 to-transparent"></div>
+              <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-white/20 to-transparent"></div>
+            </div>
+            
             <MapContainer
               center={[59.9343, 30.3351]}
               zoom={9}
-              style={{ width: '100%', height: '100%', minHeight: '75vh' }}
-              className="relative z-[1] translate-z-0 will-change-transform overflow-hidden map-container-custom"
+              style={{ width: '100%', height: '100%', minHeight: '80vh' }}
+              className="relative z-[1] map-container-custom"
             >
               <MapController />
+              {/* Используем CartoDB Positron - красивый светлый стиль */}
               <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
                 maxZoom={18}
+                subdomains="abcd"
               />
               {ecoTrails.filter(trail => trail.coords).map((trail, index) => (
                 <CustomMarker 
@@ -480,15 +476,6 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
                 />
               ))}
             </MapContainer>
-          </div>
-          <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10" aria-hidden="true">
-            <svg viewBox="0 0 941 640" preserveAspectRatio="none" className="w-full h-full block pointer-events-none">
-              <path 
-                fillRule="evenodd" 
-                className="fill-transparent pointer-events-auto" 
-                d="M0,0 L941,0 L941,640 L0,640 Z M477.647 1.1795C545.037 -1.83569 616.294 4.80555 673.882 28.724C730.391 52.1942 751.357 99.9896 795.796 133.318C840.323 166.713 919.715 182.862 937.285 226.272C955.027 270.108 893.909 311.471 886.177 356.624C878.541 401.212 921.232 449.423 892.166 489.755C863.364 529.719 788.658 542.071 734.462 567.141C681.584 591.602 637.036 627.144 574.58 636.669C512.018 646.209 448.576 629.316 385.843 620.306C323.08 611.292 256.612 607.706 203.443 583.366C149.827 558.822 116.712 519.417 83.3601 481.836C49.639 443.84 17.0344 404.837 6.19277 361.107C-4.90644 316.338 0.480742 270.138 20.1148 226.736C39.8822 183.04 112.564 165.301 160.727 133.318C207.985 101.937 232.199 64.0495 292.615 45.7827C353.059 27.5073 411.607 4.13427 477.647 1.1795Z"
-              />
-            </svg>
           </div>
         </div>
       </div>

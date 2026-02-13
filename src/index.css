@@ -141,11 +141,21 @@
 
 /* Стили для карты */
 .map-container-custom .leaflet-container {
-  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e9 50%, #d4edda 100%);
+  border-radius: 2.5rem;
+  overflow: hidden;
 }
 
 .map-container-custom .leaflet-tile-pane {
-  filter: brightness(1.05) contrast(1.05) saturate(1.1);
+  filter: brightness(1.08) contrast(1.1) saturate(1.15);
+}
+
+.map-container-custom .leaflet-tile {
+  transition: opacity 0.3s ease;
+}
+
+.map-container-custom .leaflet-tile:hover {
+  opacity: 0.95;
 }
 
 .map-container-custom .leaflet-control-zoom {
