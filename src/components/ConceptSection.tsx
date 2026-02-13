@@ -107,52 +107,13 @@ export default function ConceptSection() {
 
                 {/* Контент карточки */}
                 <div className="p-5">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-xl font-bold text-[#1a1a1a] m-0 tracking-[-0.02em] leading-[1.2] flex-1">
-                      {card.title}
-                    </h3>
-                    <button className={`
-                      w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ml-2
-                      ${hoveredIndex === index 
-                        ? 'border-primary-orange bg-primary-orange' 
-                        : 'border-gray-300 bg-transparent hover:border-primary-orange/50'
-                      }
-                    `}>
-                      <svg 
-                        className={`w-4 h-4 transition-colors duration-300 ${
-                          hoveredIndex === index ? 'text-white' : 'text-gray-400'
-                        }`}
-                        fill={hoveredIndex === index ? 'currentColor' : 'none'}
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                    </button>
-                  </div>
+                  <h3 className="text-xl font-bold text-[#1a1a1a] m-0 mb-3 tracking-[-0.02em] leading-[1.2]">
+                    {card.title}
+                  </h3>
                   
-                  <p className="text-sm font-normal text-[#666666] mb-4 leading-[1.6] line-clamp-3">
+                  <p className="text-sm font-normal text-[#666666] leading-[1.6]">
                     {card.description}
                   </p>
-
-                  {/* Информация внизу */}
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span>Чувство</span>
-                    </div>
-                    <button className={`
-                      px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300
-                      ${hoveredIndex === index
-                        ? 'bg-primary-orange text-white shadow-lg shadow-primary-orange/30'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }
-                    `}>
-                      Узнать больше
-                    </button>
-                  </div>
                 </div>
               </article>
             ))}
