@@ -46,12 +46,20 @@ npm run build
 
 Для проверки билда перед деплоем:
 
+**Для обычного репозитория (не username.github.io):**
+```bash
+# Замените REPOSITORY_NAME на имя вашего репозитория
+VITE_BASE_URL=/REPOSITORY_NAME/ npm run build
+npm run preview
+```
+
+**Для репозитория username.github.io:**
 ```bash
 npm run build
 npm run preview
 ```
 
-Это запустит локальный сервер с собранной версией проекта.
+**Важно:** При локальном тестировании убедитесь, что `VITE_BASE_URL` соответствует пути вашего репозитория на GitHub Pages. Это необходимо для корректной работы всех путей к ресурсам.
 
 ## Структура проекта
 
