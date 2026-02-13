@@ -490,11 +490,32 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
                 touchZoom={true}
               >
                 <MapController />
-                {/* Надежный стиль карты с красивым дизайном */}
-                <TileLayer
+                {/* 
+                  БЕСПЛАТНЫЕ API ДЛЯ КАРТ (можно переключаться):
+                  
+                  1. OpenTopoMap (текущий) - топографический стиль, идеален для природы
+                  url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+                  
+                  2. OpenStreetMap - стандартный стиль
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  maxZoom={18}
+                  
+                  3. CartoDB Positron - светлый минималистичный
+                  url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                  
+                  4. CartoDB Voyager - цветной стиль
+                  url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+                  
+                  5. Esri World Imagery - спутниковые снимки
+                  url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+                  
+                  6. MapTiler (требует бесплатный API ключ) - очень красивые стили
+                  url="https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=YOUR_KEY"
+                */}
+                <TileLayer
+                  url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+                  attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+                  maxZoom={17}
+                  subdomains="abc"
                 />
                 {ecoTrails.filter(trail => trail.coords).map((trail, index) => (
                   <CustomMarker 
