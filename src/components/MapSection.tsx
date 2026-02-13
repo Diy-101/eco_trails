@@ -457,44 +457,57 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
           )}
         </div>
         
-        {/* Улучшенная карта с новым стилем */}
+        {/* Переделанная карта с интересным дизайном */}
         <div className="relative w-full mx-auto max-w-7xl">
-          <div className="relative w-full h-[80vh] min-h-[600px] bg-gradient-to-br from-[#f0f8f0] via-[#e8f5e9] to-[#d4edda] rounded-[2.5rem] overflow-hidden shadow-[0_20px_100px_rgba(0,0,0,0.15),0_0_60px_rgba(77,92,71,0.2),inset_0_1px_0_rgba(255,255,255,0.5)] border-4 border-white/30 backdrop-blur-sm">
-            {/* Декоративные элементы на карте */}
-            <div className="absolute inset-0 pointer-events-none z-[2]">
-              <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white/20 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white/20 to-transparent"></div>
-              <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-white/20 to-transparent"></div>
-              <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-white/20 to-transparent"></div>
-            </div>
+          {/* Внешний контейнер с эффектами */}
+          <div className="relative w-full h-[85vh] min-h-[650px] group">
+            {/* Декоративные градиенты вокруг карты */}
+            <div className="absolute -inset-4 bg-gradient-to-br from-primary-orange/20 via-primary-orange-light/10 to-transparent rounded-[3rem] blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+            <div className="absolute -inset-2 bg-gradient-to-tr from-[#4D5C47]/30 via-transparent to-[#556350]/20 rounded-[2.5rem] blur-xl"></div>
             
-            <MapContainer
-              center={[59.9343, 30.3351]}
-              zoom={9}
-              style={{ width: '100%', height: '100%' }}
-              className="relative z-[1] map-container-custom"
-              scrollWheelZoom={true}
-              doubleClickZoom={true}
-              dragging={true}
-              touchZoom={true}
-            >
-              <MapController />
-              {/* Стиль карты в духе CoMaps - чистый и минималистичный */}
-              <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a> | Inspired by <a href="https://github.com/comaps/comaps">CoMaps</a>'
-                maxZoom={18}
-                subdomains="abcd"
-              />
-              {ecoTrails.filter(trail => trail.coords).map((trail, index) => (
-                <CustomMarker 
-                  key={index} 
-                  trail={trail} 
-                  onTrailClick={onTrailClick}
-                  isVisible={filteredTrails.includes(trail)}
+            {/* Основной контейнер карты */}
+            <div className="relative w-full h-full bg-gradient-to-br from-[#e8f5e9] via-[#d4edda] to-[#c8e6c9] rounded-[2.5rem] overflow-hidden shadow-[0_25px_120px_rgba(77,92,71,0.3),0_0_80px_rgba(255,140,66,0.15),inset_0_2px_0_rgba(255,255,255,0.6)] border-[3px] border-white/40 backdrop-blur-sm">
+              {/* Анимированные декоративные элементы */}
+              <div className="absolute inset-0 pointer-events-none z-[2] overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-white/30 via-white/10 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-white/30 via-white/10 to-transparent"></div>
+                <div className="absolute top-0 left-0 w-40 h-full bg-gradient-to-r from-white/30 via-white/10 to-transparent"></div>
+                <div className="absolute top-0 right-0 w-40 h-full bg-gradient-to-l from-white/30 via-white/10 to-transparent"></div>
+                
+                {/* Плавающие световые эффекты */}
+                <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary-orange/10 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-primary-orange-light/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+              </div>
+              
+              <MapContainer
+                center={[59.9343, 30.3351]}
+                zoom={9}
+                style={{ width: '100%', height: '100%' }}
+                className="relative z-[1] map-container-custom"
+                scrollWheelZoom={true}
+                doubleClickZoom={true}
+                dragging={true}
+                touchZoom={true}
+              >
+                <MapController />
+                {/* Красивый стиль карты - Stamen Terrain для природных маршрутов */}
+                <TileLayer
+                  url="https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png"
+                  attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  subdomains="abcd"
+                  minZoom={0}
+                  maxZoom={18}
                 />
-              ))}
-            </MapContainer>
+                {ecoTrails.filter(trail => trail.coords).map((trail, index) => (
+                  <CustomMarker 
+                    key={index} 
+                    trail={trail} 
+                    onTrailClick={onTrailClick}
+                    isVisible={filteredTrails.includes(trail)}
+                  />
+                ))}
+              </MapContainer>
+            </div>
           </div>
         </div>
       </div>
