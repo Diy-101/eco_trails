@@ -140,14 +140,22 @@
 }
 
 /* Стили для карты */
+.map-container-custom {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .map-container-custom .leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
   background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e9 50%, #d4edda 100%);
   border-radius: 2.5rem;
   overflow: hidden;
+  z-index: 1;
 }
 
 .map-container-custom .leaflet-tile-pane {
-  filter: brightness(1.08) contrast(1.1) saturate(1.15);
+  filter: brightness(1.05) contrast(1.05) saturate(1.1);
 }
 
 .map-container-custom .leaflet-tile {

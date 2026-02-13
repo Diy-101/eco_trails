@@ -33,11 +33,21 @@ function MapController() {
       [61.5, 32.5]
     )
 
+    // Настройки карты как в оригинале
     map.setMaxBounds(bounds)
     map.setMinZoom(8)
     map.setMaxZoom(12)
-
+    map.setMaxBounds(bounds)
+    
+    // Жесткая блокировка выхода за границы
     const handleDrag = () => {
+      const center = map.getCenter()
+      if (!bounds.contains(center)) {
+        map.panInsideBounds(bounds, { animate: false })
+      }
+    }
+
+    const handleMove = () => {
       const center = map.getCenter()
       if (!bounds.contains(center)) {
         map.panInsideBounds(bounds, { animate: false })
@@ -46,12 +56,17 @@ function MapController() {
 
     map.on('drag', handleDrag)
     map.on('moveend', handleDrag)
-    map.on('move', handleDrag)
+    map.on('move', handleMove)
+
+    // Устанавливаем границы при готовности карты
+    map.whenReady(() => {
+      map.setMaxBounds(bounds)
+    })
 
     return () => {
       map.off('drag', handleDrag)
       map.off('moveend', handleDrag)
-      map.off('move', handleDrag)
+      map.off('move', handleMove)
     }
   }, [map])
 
@@ -444,7 +459,7 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
         
         {/* Улучшенная карта с новым стилем */}
         <div className="relative w-full mx-auto max-w-7xl">
-          <div className="relative w-full min-h-[80vh] bg-gradient-to-br from-[#f0f8f0] via-[#e8f5e9] to-[#d4edda] rounded-[2.5rem] overflow-hidden shadow-[0_20px_100px_rgba(0,0,0,0.15),0_0_60px_rgba(77,92,71,0.2),inset_0_1px_0_rgba(255,255,255,0.5)] border-4 border-white/30 backdrop-blur-sm">
+          <div className="relative w-full h-[80vh] min-h-[600px] bg-gradient-to-br from-[#f0f8f0] via-[#e8f5e9] to-[#d4edda] rounded-[2.5rem] overflow-hidden shadow-[0_20px_100px_rgba(0,0,0,0.15),0_0_60px_rgba(77,92,71,0.2),inset_0_1px_0_rgba(255,255,255,0.5)] border-4 border-white/30 backdrop-blur-sm">
             {/* Декоративные элементы на карте */}
             <div className="absolute inset-0 pointer-events-none z-[2]">
               <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white/20 to-transparent"></div>
@@ -456,16 +471,19 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
             <MapContainer
               center={[59.9343, 30.3351]}
               zoom={9}
-              style={{ width: '100%', height: '100%', minHeight: '80vh' }}
+              style={{ width: '100%', height: '100%' }}
               className="relative z-[1] map-container-custom"
+              scrollWheelZoom={true}
+              doubleClickZoom={true}
+              dragging={true}
+              touchZoom={true}
             >
               <MapController />
-              {/* Используем CartoDB Positron - красивый светлый стиль */}
+              {/* OpenStreetMap тайлы как в оригинале */}
               <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 maxZoom={18}
-                subdomains="abcd"
               />
               {ecoTrails.filter(trail => trail.coords).map((trail, index) => (
                 <CustomMarker 
