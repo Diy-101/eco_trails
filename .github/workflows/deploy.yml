@@ -36,14 +36,20 @@ jobs:
         id: base_url
         run: |
           if [ "${{ github.repository }}" == "${{ github.repository_owner }}.github.io" ]; then
-            echo "base=/" >> $GITHUB_OUTPUT
-            echo "BASE_URL=/" >> $GITHUB_ENV
+            BASE_PATH="/"
           else
             REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
-            echo "base=/$REPO_NAME/" >> $GITHUB_OUTPUT
-            echo "BASE_URL=/$REPO_NAME/" >> $GITHUB_ENV
+            BASE_PATH="/$REPO_NAME/"
           fi
-          echo "Setting VITE_BASE_URL to: $BASE_URL"
+          echo "base=$BASE_PATH" >> $GITHUB_OUTPUT
+          echo "BASE_URL=$BASE_PATH" >> $GITHUB_ENV
+          echo "VITE_BASE_URL=$BASE_PATH" >> $GITHUB_ENV
+          echo "Setting VITE_BASE_URL to: $BASE_PATH"
+
+      - name: Verify base URL
+        run: |
+          echo "VITE_BASE_URL from env: $VITE_BASE_URL"
+          echo "BASE_URL from env: $BASE_URL"
 
       - name: Build
         run: npm run build
