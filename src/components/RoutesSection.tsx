@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Trail } from '../types'
 import { recommendedRoutes } from '../data/trails'
+import { getAssetPath } from '../utils/paths'
 
 interface RoutesSectionProps {
   onTrailClick: (trail: Trail) => void
@@ -28,7 +29,7 @@ export default function RoutesSection({ onTrailClick }: RoutesSectionProps) {
   return (
     <section id="routes-section" className="relative p-0 bg-black overflow-visible w-full flex flex-col min-h-full">
       <img 
-        src="фон рекомендуемые маршруты.png" 
+        src={getAssetPath("фон рекомендуемые маршруты.png")} 
         alt="" 
         className="absolute top-0 left-0 w-full h-full min-h-full object-cover object-center z-0 block"
       />
@@ -59,7 +60,7 @@ export default function RoutesSection({ onTrailClick }: RoutesSectionProps) {
                 <div className="flex gap-5 mb-4 max-w-full overflow-hidden w-full flex-shrink-1 min-h-0 items-start">
                   <div className="flex-shrink-0 w-[140px] h-[140px] min-w-[140px] min-h-[140px] rounded-2xl overflow-hidden border-[3px] border-[#B0D4E8] box-border shadow-[0_8px_24px_rgba(0,0,0,0.2),0_4px_12px_rgba(0,0,0,0.15)] transition-all duration-400 relative group hover:scale-105 hover:shadow-[0_12px_32px_rgba(0,0,0,0.25),0_6px_16px_rgba(0,0,0,0.2)]">
                     <img 
-                      src={route.image} 
+                      src={getAssetPath(route.image)} 
                       alt={route.name} 
                       className="w-full h-full object-cover block transition-transform duration-300 group-hover:scale-105"
                     />

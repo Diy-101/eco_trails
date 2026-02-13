@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { Trail } from '../types'
+import { getAssetPath } from '../utils/paths'
 
 interface RoutesModalProps {
   isOpen: boolean
@@ -123,7 +124,7 @@ export default function RoutesModal({ isOpen, onClose, routes, onTrailClick, fil
                   {/* Изображение маршрута */}
                   <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
                     <img 
-                      src={route.image} 
+                      src={getAssetPath(route.image)} 
                       alt={route.name} 
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                       onError={(e) => {
@@ -131,7 +132,7 @@ export default function RoutesModal({ isOpen, onClose, routes, onTrailClick, fil
                         // Пробуем найти изображение с " карточка"
                         if (!route.image.includes(' карточка')) {
                           const cardImage = route.image.replace('.png', ' карточка.png')
-                          target.src = cardImage
+                          target.src = getAssetPath(cardImage)
                         }
                       }}
                     />

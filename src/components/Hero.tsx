@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { getAssetPath } from '../utils/paths'
 
 interface HeroProps {
   onMapClick: () => void
@@ -43,20 +44,20 @@ export default function Hero({ onMapClick, onRoutesClick }: HeroProps) {
   return (
     <section className="relative w-full h-screen overflow-hidden flex items-center justify-center max-md:h-auto max-md:min-h-[35vh] max-md:max-h-[45vh]">
       <img 
-        src="фон.png" 
+        src={getAssetPath("фон.png")} 
         alt="" 
         className="absolute top-0 left-0 w-full h-full object-cover z-[1]" 
       />
       
       <img 
-        src="елки и холм.png" 
+        src={getAssetPath("елки и холм.png")} 
         alt="" 
         className="absolute bottom-0 left-0 w-full h-auto object-contain object-bottom z-[3]" 
       />
       
       <img 
         ref={titleRef}
-        src="надпись.png" 
+        src={getAssetPath("надпись.png")} 
         alt="ЭКОТРОПЫ" 
         id="hero-title"
         className="absolute top-[28%] left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.88] z-[2] max-w-[72%] w-auto h-auto max-h-[28vh] will-change-transform pointer-events-none backface-hidden object-contain"

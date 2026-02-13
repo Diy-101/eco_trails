@@ -1,3 +1,5 @@
+import { getAssetPath } from '../utils/paths'
+
 export default function CTACompanion() {
   return (
     <section className="w-full bg-gradient-to-b from-[#596652] to-[#6C7965] py-[72px] px-12 relative overflow-hidden">
@@ -19,7 +21,7 @@ export default function CTACompanion() {
         </div>
         <div className="flex justify-center items-center max-md:order-[-1]">
           <img 
-            src="нашел маршрут найди пару.png" 
+            src={getAssetPath("нашел маршрут найди пару.png")} 
             alt="Попутчики на экотропе" 
             className="w-full max-w-[460px] h-auto rounded-[20px] object-cover shadow-[0_8px_24px_rgba(0,0,0,0.2)]"
           />

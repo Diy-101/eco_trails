@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Trail } from '../types'
+import { getAssetPath } from '../utils/paths'
 
 interface TrailModalProps {
   trail: Trail | null
@@ -23,7 +24,7 @@ export default function TrailModal({ trail, isOpen, onClose }: TrailModalProps) 
     if (!trail.image.includes(' карточка')) {
       images.push(trail.image)
     }
-    return images
+    return images.map(img => getAssetPath(img))
   }
 
   const images = trail ? getImages(trail) : []
@@ -156,10 +157,11 @@ export default function TrailModal({ trail, isOpen, onClose }: TrailModalProps) 
                     onError={(e) => {
                       const target = e.target as HTMLImageElement
                       // Если изображение с " карточка" не найдено, пробуем оригинальное
-                      if (images[currentImageIndex].includes(' карточка')) {
-                        const originalImage = images[currentImageIndex].replace(' карточка.png', '.png')
-                        if (originalImage !== images[currentImageIndex]) {
-                          target.src = originalImage
+                      const currentImage = images[currentImageIndex]
+                      if (currentImage.includes(' карточка')) {
+                        const originalImage = currentImage.replace(' карточка.png', '.png').replace(import.meta.env.BASE_URL, '')
+                        if (originalImage !== currentImage) {
+                          target.src = getAssetPath(originalImage)
                         }
                       }
                     }}

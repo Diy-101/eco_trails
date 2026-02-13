@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { conceptCards } from '../data/trails'
+import { getAssetPath } from '../utils/paths'
 
 interface ConceptSectionProps {
   onCardClick: (filterType: 'look' | 'listen' | 'taste' | 'touch' | 'feel' | null) => void
@@ -104,7 +105,7 @@ export default function ConceptSection({ onCardClick }: ConceptSectionProps) {
                     ${hoveredIndex === index ? 'scale-125 rotate-[15deg] shadow-primary-orange/50' : 'scale-100 rotate-0'}
                   `}>
                     <img 
-                      src={card.icon} 
+                      src={getAssetPath(card.icon)} 
                       alt={card.title} 
                       className="w-14 h-14 object-contain brightness-0 invert drop-shadow-lg transition-transform duration-500 group-hover:scale-110"
                     />

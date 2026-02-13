@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import { Trail } from '../types'
 import { ecoTrails } from '../data/trails'
+import { getAssetPath } from '../utils/paths'
 import 'leaflet/dist/leaflet.css'
 
 // Fix для иконок Leaflet
@@ -100,9 +101,11 @@ function CustomMarker({ trail, onTrailClick, isVisible }: { trail: Trail; onTrai
   const markerRef = useRef<L.Marker | null>(null)
 
   // Получаем путь к изображению (с учетом возможного суффикса " карточка")
-  const imagePath = trail.image.includes(' карточка') 
-    ? trail.image 
-    : trail.image.replace('.png', ' карточка.png')
+  const imagePath = getAssetPath(
+    trail.image.includes(' карточка') 
+      ? trail.image 
+      : trail.image.replace('.png', ' карточка.png')
+  )
 
   // Добавляем обработчики событий для попапа при открытии
   useEffect(() => {
@@ -177,7 +180,7 @@ function CustomMarker({ trail, onTrailClick, isVisible }: { trail: Trail; onTrai
     html: `
       <div class="marker-pulse"></div>
       <span class="map-marker-circle"></span>
-      <img src="${trail.icon}" alt="${trail.name}" class="map-marker-icon" width="${markerSize}" height="${markerSize}" />
+      <img src="${getAssetPath(trail.icon || '')}" alt="${trail.name}" class="map-marker-icon" width="${markerSize}" height="${markerSize}" />
     `,
     iconSize: [circleSize, circleSize],
     iconAnchor: [circleSize / 2, circleSize],
@@ -263,8 +266,8 @@ function CustomMarker({ trail, onTrailClick, isVisible }: { trail: Trail; onTrai
                     onError={(e) => {
                       // Если изображение с " карточка" не найдено, пробуем оригинальное
                       const target = e.target as HTMLImageElement
-                      if (imagePath.includes(' карточка')) {
-                        target.src = trail.image
+                      if (trail.image.includes(' карточка') || imagePath.includes(' карточка')) {
+                        target.src = getAssetPath(trail.image.replace(' карточка.png', '.png'))
                       }
                     }}
                   />
