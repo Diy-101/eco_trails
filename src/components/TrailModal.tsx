@@ -140,7 +140,7 @@ export default function TrailModal({ trail, isOpen, onClose }: TrailModalProps) 
         setIsPlaying(true)
       }
       
-      const handleError = (e: Event) => {
+      const handleError = () => {
         const error = audio.error
         console.error('Ошибка загрузки аудио:', {
           path: audioPath,
