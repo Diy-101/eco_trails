@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Экотропы - Ленинградская область</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <!-- Hero Section with Parallax -->
+    <section class="hero" aria-labelledby="hero-title">
+      <!-- Background -->
+      <img src="фон.png" alt="" class="hero__background" />
+      
+      <!-- Trees and Hills -->
+      <img src="елки и холм.png" alt="" class="hero__trees-hills" />
+      
+      <!-- Title with Parallax -->
+      <img src="надпись.png" alt="ЭКОТРОПЫ" id="hero-title" class="hero__title" />
+      
+      <!-- Description and Buttons -->
+      <div class="hero__content">
+        <p class="hero__description">
+          Познакомься с природой Ленинградской области в 5 раз эффективнее
+        </p>
+        <div class="hero__actions">
+          <button class="hero__button hero__button--primary" type="button">
+            Карта троп
+          </button>
+          <button class="hero__button hero__button--secondary" type="button">
+            Рекомендуемые маршруты
+          </button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Concept Section -->
+    <section class="concept-section">
+      <div class="concept-section__inner">
+        <div class="concept-section__content">
+          <h2 class="concept-section__title">
+            Пусть маршрут точно придется тебе <span class="concept-section__title-accent">по вкусу</span>
+          </h2>
+          <p class="concept-section__subtitle">
+            Мы сделали так, чтобы ты мог выбрать ту экотропу, которая подарит тебе <span class="concept-section__subtitle-accent">нужные эмоции</span>
+          </p>
+          
+          <div class="concept-grid">
+            <article class="concept-card">
+              <div class="concept-card__icon">
+                <img src="ощути.png" alt="Почувствуй" />
+              </div>
+              <div class="concept-card__text">
+                <h3 class="concept-card__title">Почувствуй</h3>
+                <p class="concept-card__description">
+                  Вдохните полной грудью! Этот маршрут — чистый ароматерапевтический сеанс. Он проведёт вас через разные «залы» парфюмерии природы. Каждый вдох здесь — это история места.
+                </p>
+              </div>
+            </article>
+            
+            <article class="concept-card">
+              <div class="concept-card__icon">
+                <img src="потрогай.png" alt="Потрогай" />
+              </div>
+              <div class="concept-card__text">
+                <h3 class="concept-card__title">Потрогай</h3>
+                <p class="concept-card__description">
+                  Приготовьтесь ощутить мир кончиками пальцев. Этот маршрут учит читать природу через тактильные ощущения.
+                </p>
+              </div>
+            </article>
+            
+            <article class="concept-card">
+              <div class="concept-card__icon">
+                <img src="услышь.png" alt="Прислушайся" />
+              </div>
+              <div class="concept-card__text">
+                <h3 class="concept-card__title">Прислушайся</h3>
+                <p class="concept-card__description">
+                  Здесь нужно идти тихо и внимательно слушать. Забудьте о городском шуме. Мы хотим, чтобы вы акцентировали внимание на мелодии природы.
+                </p>
+              </div>
+            </article>
+            
+            <article class="concept-card">
+              <div class="concept-card__icon">
+                <img src="попробуй.png" alt="Попробуй" />
+              </div>
+              <div class="concept-card__text">
+                <h3 class="concept-card__title">Попробуй</h3>
+                <p class="concept-card__description">
+                  Этот маршрут — гастрономическое путешествие с строгим правилом: пробуем только то, что точно знаем и собрали с гидом-экспертом! Он познакомит вас со вкусами дикой природы Ленобласти.
+                </p>
+              </div>
+            </article>
+            
+            <article class="concept-card">
+              <div class="concept-card__icon">
+                <img src="увидь.png" alt="Увидь" />
+              </div>
+              <div class="concept-card__text">
+                <h3 class="concept-card__title">Увидь</h3>
+                <p class="concept-card__description">
+                  Откройте для себя мир, где пейзаж меняется на каждом шагу. Эти экотропы — фотопутешествие, где главный объектив — ваш глаз.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+        
+        <div class="concept-section__image">
+          <img src="мужик.png" alt="Человек с дроном на экотропе" />
+        </div>
+      </div>
+    </section>
+    
+    <!-- Map Section -->
+    <section class="map-section" id="map-section">
+      <div class="map-section__inner">
+        <h2 class="map-section__title">Карта троп</h2>
+        
+        <div class="map-section__filter-wrapper">
+          <button class="map-filter-button" id="mapFilterButton" type="button" aria-label="Фильтр маршрутов">
+            <span class="map-filter-button__text">Фильтр</span>
+            <svg class="map-filter-button__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 12L4 8L8 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="map-filter-dropdown" id="mapFilterDropdown">
+            <div class="map-filter-dropdown__item" data-filter="look">
+              <img src="увидь.png" alt="" class="map-filter-dropdown__icon" />
+              <span class="map-filter-dropdown__text">Присмотрись</span>
+            </div>
+            <div class="map-filter-dropdown__item" data-filter="listen">
+              <img src="услышь.png" alt="" class="map-filter-dropdown__icon" />
+              <span class="map-filter-dropdown__text">Прислушайся</span>
+            </div>
+            <div class="map-filter-dropdown__item" data-filter="taste">
+              <img src="попробуй.png" alt="" class="map-filter-dropdown__icon" />
+              <span class="map-filter-dropdown__text">Попробуй</span>
+            </div>
+            <div class="map-filter-dropdown__item" data-filter="touch">
+              <img src="потрогай.png" alt="" class="map-filter-dropdown__icon" />
+              <span class="map-filter-dropdown__text">Прикоснись</span>
+            </div>
+            <div class="map-filter-dropdown__item" data-filter="feel">
+              <img src="ощути.png" alt="" class="map-filter-dropdown__icon" />
+              <span class="map-filter-dropdown__text">Почувствуй</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="map-blob-wrapper">
+          <div class="map-blob" id="mapContainer"></div>
+          <div class="map-blob-overlay" aria-hidden="true">
+            <svg viewBox="0 0 941 640" preserveAspectRatio="none" class="map-blob-overlay__svg">
+              <path fill-rule="evenodd" class="map-blob-overlay__frame" d="M0,0 L941,0 L941,640 L0,640 Z M477.647 1.1795C545.037 -1.83569 616.294 4.80555 673.882 28.724C730.391 52.1942 751.357 99.9896 795.796 133.318C840.323 166.713 919.715 182.862 937.285 226.272C955.027 270.108 893.909 311.471 886.177 356.624C878.541 401.212 921.232 449.423 892.166 489.755C863.364 529.719 788.658 542.071 734.462 567.141C681.584 591.602 637.036 627.144 574.58 636.669C512.018 646.209 448.576 629.316 385.843 620.306C323.08 611.292 256.612 607.706 203.443 583.366C149.827 558.822 116.712 519.417 83.3601 481.836C49.639 443.84 17.0344 404.837 6.19277 361.107C-4.90644 316.338 0.480742 270.138 20.1148 226.736C39.8822 183.04 112.564 165.301 160.727 133.318C207.985 101.937 232.199 64.0495 292.615 45.7827C353.059 27.5073 411.607 4.13427 477.647 1.1795Z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Recommended Routes Section -->
+    <section class="routes-section" id="routes-section">
+      <img src="фон рекомендуемые маршруты.png" alt="" class="routes-section__background" />
+      <div class="routes-section__inner">
+        <h2 class="routes-section__title">Рекомендуемые маршруты</h2>
+        
+        <div class="routes-grid">
+          <article class="route-card" data-card-index="0">
+            <div class="route-card__perforation"></div>
+            <div class="route-card__barcode"></div>
+            <div class="route-card__main">
+              <div class="route-card__image-wrapper">
+                <img src="курголовская этнотропа.png" alt="Курголовская этнотропа" class="route-card__image" />
+              </div>
+              <div class="route-card__text-content">
+                <h3 class="route-card__title">Курголовская этнотропа</h3>
+                <p class="route-card__description">
+                  Эколого-этнографический маршрут во Всеволожском районе. Поднимитесь на один из камовых холмов, и вам откроется потрясающий вид.
+                </p>
+              </div>
+            </div>
+            <div class="route-card__details">
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 0C6.134 0 3 3.134 3 7C3 11.5 10 16 10 16S17 11.5 17 7C17 3.134 13.866 0 10 0ZM10 9.5C8.619 9.5 7.5 8.381 7.5 7C7.5 5.619 8.619 4.5 10 4.5C11.381 4.5 12.5 5.619 12.5 7C12.5 8.381 11.381 9.5 10 9.5Z" fill="#000000"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-value">2.5 KM</span>
+                  <span class="route-card__detail-label">РАССТОЯНИЕ</span>
+                </div>
+              </div>
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="9" stroke="#000000" stroke-width="2"/>
+                  <path d="M10 5V10L13 13" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-value">0.5 Ч</span>
+                  <span class="route-card__detail-label">ТАЙМИНГ</span>
+                </div>
+              </div>
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="8" fill="#000000"/>
+                  <path d="M6 10L9 13L14 7" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-label">ЧУВСТВО</span>
+                </div>
+              </div>
+            </div>
+          </article>
+          
+          <article class="route-card" data-card-index="1">
+            <div class="route-card__perforation"></div>
+            <div class="route-card__barcode"></div>
+            <div class="route-card__main">
+              <div class="route-card__image-wrapper">
+                <img src="заячья тропа.png" alt="Заячья тропа" class="route-card__image" />
+              </div>
+              <div class="route-card__text-content">
+                <h3 class="route-card__title">Заячья тропа</h3>
+                <p class="route-card__description">
+                  Пешеходный экомаршрут на территории памятника природы «Колтушские высоты». Вы услышите не только шум густой тайги, но и пение редких лесных птиц.
+                </p>
+              </div>
+            </div>
+            <div class="route-card__details">
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 0C6.134 0 3 3.134 3 7C3 11.5 10 16 10 16S17 11.5 17 7C17 3.134 13.866 0 10 0ZM10 9.5C8.619 9.5 7.5 8.381 7.5 7C7.5 5.619 8.619 4.5 10 4.5C11.381 4.5 12.5 5.619 12.5 7C12.5 8.381 11.381 9.5 10 9.5Z" fill="#000000"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-value">3.2 KM</span>
+                  <span class="route-card__detail-label">РАССТОЯНИЕ</span>
+                </div>
+              </div>
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="9" stroke="#000000" stroke-width="2"/>
+                  <path d="M10 5V10L13 13" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-value">50 МИН</span>
+                  <span class="route-card__detail-label">ТАЙМИНГ</span>
+                </div>
+              </div>
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="8" fill="#000000"/>
+                  <path d="M6 10L9 13L14 7" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-label">ЧУВСТВО</span>
+                </div>
+              </div>
+            </div>
+          </article>
+          
+          <article class="route-card" data-card-index="2">
+            <div class="route-card__perforation"></div>
+            <div class="route-card__barcode"></div>
+            <div class="route-card__main">
+              <div class="route-card__image-wrapper">
+                <img src="долина реки рагуша.png" alt="Долина реки Рагуша" class="route-card__image" />
+              </div>
+              <div class="route-card__text-content">
+                <h3 class="route-card__title">Долина реки Рагуша</h3>
+                <p class="route-card__description">
+                  Расположена в Бокситогорском районе близ реки Рудная Горка. Прикоснитесь к известняку каменноугольного периода, кристально чистой воды и древнего каньона. Настоящее тактильное путешествие!
+                </p>
+              </div>
+            </div>
+            <div class="route-card__details">
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 0C6.134 0 3 3.134 3 7C3 11.5 10 16 10 16S17 11.5 17 7C17 3.134 13.866 0 10 0ZM10 9.5C8.619 9.5 7.5 8.381 7.5 7C7.5 5.619 8.619 4.5 10 4.5C11.381 4.5 12.5 5.619 12.5 7C12.5 8.381 11.381 9.5 10 9.5Z" fill="#000000"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-value">5 KM</span>
+                  <span class="route-card__detail-label">РАССТОЯНИЕ</span>
+                </div>
+              </div>
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="9" stroke="#000000" stroke-width="2"/>
+                  <path d="M10 5V10L13 13" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-value">2 Ч</span>
+                  <span class="route-card__detail-label">ТАЙМИНГ</span>
+                </div>
+              </div>
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="8" fill="#000000"/>
+                  <path d="M6 10L9 13L14 7" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-label">ЧУВСТВО</span>
+                </div>
+              </div>
+            </div>
+          </article>
+          
+          <article class="route-card" data-card-index="3">
+            <div class="route-card__perforation"></div>
+            <div class="route-card__barcode"></div>
+            <div class="route-card__main">
+              <div class="route-card__image-wrapper">
+                <img src="экотропа сестрорецкое болото.png" alt="Экотропа Сестрорецкое болото" class="route-card__image" />
+              </div>
+              <div class="route-card__text-content">
+                <h3 class="route-card__title">Экотропа «Сестрорецкое болото»</h3>
+                <p class="route-card__description">
+                  Маршрут на территории одноимённого природного заказника. Её кустарники богаты вкуснейшей клюквой, черникой, брусникой и голубикой. Захватите с собой корзинку!
+                </p>
+              </div>
+            </div>
+            <div class="route-card__details">
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 0C6.134 0 3 3.134 3 7C3 11.5 10 16 10 16S17 11.5 17 7C17 3.134 13.866 0 10 0ZM10 9.5C8.619 9.5 7.5 8.381 7.5 7C7.5 5.619 8.619 4.5 10 4.5C11.381 4.5 12.5 5.619 12.5 7C12.5 8.381 11.381 9.5 10 9.5Z" fill="#000000"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-value">3.5 KM</span>
+                  <span class="route-card__detail-label">РАССТОЯНИЕ</span>
+                </div>
+              </div>
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="9" stroke="#000000" stroke-width="2"/>
+                  <path d="M10 5V10L13 13" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-value">1 Ч</span>
+                  <span class="route-card__detail-label">ТАЙМИНГ</span>
+                </div>
+              </div>
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="8" fill="#000000"/>
+                  <path d="M6 10L9 13L14 7" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-label">ЧУВСТВО</span>
+                </div>
+              </div>
+            </div>
+          </article>
+          
+          <article class="route-card" data-card-index="4">
+            <div class="route-card__perforation"></div>
+            <div class="route-card__barcode"></div>
+            <div class="route-card__main">
+              <div class="route-card__image-wrapper">
+                <img src="еловые холмы.png" alt="Еловые холмы" class="route-card__image" />
+              </div>
+              <div class="route-card__text-content">
+                <h3 class="route-card__title">Еловые холмы</h3>
+                <p class="route-card__description">
+                  Экотропа, проходящая по территории памятника природы «Токсовские высоты». Лес пахнет таёжной свежестью, так что можно услышать уникальные хвойные ароматы.
+                </p>
+              </div>
+            </div>
+            <div class="route-card__details">
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 0C6.134 0 3 3.134 3 7C3 11.5 10 16 10 16S17 11.5 17 7C17 3.134 13.866 0 10 0ZM10 9.5C8.619 9.5 7.5 8.381 7.5 7C7.5 5.619 8.619 4.5 10 4.5C11.381 4.5 12.5 5.619 12.5 7C12.5 8.381 11.381 9.5 10 9.5Z" fill="#000000"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-value">3.2 KM</span>
+                  <span class="route-card__detail-label">РАССТОЯНИЕ</span>
+                </div>
+              </div>
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="9" stroke="#000000" stroke-width="2"/>
+                  <path d="M10 5V10L13 13" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-value">1.5 Ч</span>
+                  <span class="route-card__detail-label">ТАЙМИНГ</span>
+                </div>
+              </div>
+              <div class="route-card__detail">
+                <svg class="route-card__icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="8" fill="#000000"/>
+                  <path d="M6 10L9 13L14 7" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <div class="route-card__detail-text">
+                  <span class="route-card__detail-label">ЧУВСТВО</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Блок: Случайный выбор (оранжевый) -->
+    <section class="cta-random">
+      <div class="cta-random__inner">
+        <div class="cta-random__lines-wrap">
+          <img src="линии абстрактные.png" alt="" class="cta-random__lines" />
+          <div class="cta-random__content">
+            <p class="cta-random__text">
+              Не смог определиться с экотропой? Положись на волю судьбы и отправься в особое путешествие. Наш сайт подберёт для тебя интересный маршрут с помощью рандомайзера.
+            </p>
+            <button type="button" class="cta-random__button">Случайный выбор</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Блок: Найди попутчика (тёмно-зелёный) -->
+    <section class="cta-companion">
+      <div class="cta-companion__inner">
+        <div class="cta-companion__content">
+          <h2 class="cta-companion__title">
+            <span class="cta-companion__title-line">Нашел маршрут —</span>
+            <span class="cta-companion__title-accent">найди и пару!</span>
+          </h2>
+          <p class="cta-companion__text">
+            Мы знаем, что иногда для ярких моментов может не хватать попутчика, готового их разделить. Поэтому мы создали мини-приложение в Telegram, где сотни желающих погулять по экотропам Ленинградской области ищут себе компанию, и, возможно, именно тебя!
+          </p>
+          <button type="button" class="cta-companion__button">Найти попутчика</button>
+        </div>
+        <div class="cta-companion__image-wrap">
+          <img src="нашел маршрут найди пару.png" alt="Попутчики на экотропе" class="cta-companion__image" />
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <!-- Trail Modal -->
+  <div class="trail-modal" id="trailModal">
+    <div class="trail-modal__overlay"></div>
+    <div class="trail-modal__content">
+      <button class="trail-modal__close" type="button" aria-label="Закрыть">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="trail-modal__body" id="trailModalBody"></div>
+    </div>
+  </div>
+  
+  <footer class="site-footer">
+    <div class="site-footer__content">
+      <p class="site-footer__copyright">©2005-2026</p>
+      <p class="site-footer__text">Фотографии взяты из Интернета.</p>
+      <p class="site-footer__text">Источники: oopt.spb.ru, maxplant.ru, eco-trails.ru.</p>
+      <p class="site-footer__text">Авторы: Илона Касьянова, Арсений Кашкаров, Валерий Шишенков, Вадим Кухтин.</p>
+    </div>
+  </footer>
+  
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
