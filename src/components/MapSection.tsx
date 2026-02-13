@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import { Trail } from '../types'
 import { ecoTrails } from '../data/trails'
@@ -59,14 +59,15 @@ function MapController() {
 }
 
 function CustomMarker({ trail, onTrailClick, isVisible }: { trail: Trail; onTrailClick: (trail: Trail) => void; isVisible: boolean }) {
-  const markerSize = 50
-  const circleSize = 64
+  const markerSize = 56
+  const circleSize = 72
 
   const icon = L.divIcon({
     className: 'map-marker-with-circle',
     html: `
+      <div class="marker-pulse"></div>
       <span class="map-marker-circle"></span>
-      <img src="${trail.icon}" alt="" class="map-marker-icon" width="${markerSize}" height="${markerSize}" />
+      <img src="${trail.icon}" alt="${trail.name}" class="map-marker-icon" width="${markerSize}" height="${markerSize}" />
     `,
     iconSize: [circleSize, circleSize],
     iconAnchor: [circleSize / 2, circleSize],
@@ -80,9 +81,24 @@ function CustomMarker({ trail, onTrailClick, isVisible }: { trail: Trail; onTrai
       position={trail.coords!}
       icon={icon}
       eventHandlers={{
-        click: () => onTrailClick(trail)
+        click: () => onTrailClick(trail),
+        mouseover: () => {},
+        mouseout: () => {}
       }}
-    />
+    >
+      <Popup className="custom-popup" closeButton={false}>
+        <div className="popup-content">
+          <h3 className="popup-title">{trail.name} {trail.subtitle}</h3>
+          <p className="popup-description">{trail.description.substring(0, 100)}...</p>
+          <button 
+            onClick={() => onTrailClick(trail)}
+            className="popup-button"
+          >
+            Подробнее
+          </button>
+        </div>
+      </Popup>
+    </Marker>
   )
 }
 
@@ -92,30 +108,30 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
   const filterRef = useRef<HTMLDivElement>(null)
 
   const feelingFilters = [
-    { filter: 'look', icon: 'увидь.png', text: 'Присмотрись' },
-    { filter: 'listen', icon: 'услышь.png', text: 'Прислушайся' },
-    { filter: 'taste', icon: 'попробуй.png', text: 'Попробуй' },
-    { filter: 'touch', icon: 'потрогай.png', text: 'Прикоснись' },
-    { filter: 'feel', icon: 'ощути.png', text: 'Почувствуй' },
+    { filter: 'look', icon: 'увидь.png', text: 'Присмотрись', color: 'from-blue-500 to-cyan-500' },
+    { filter: 'listen', icon: 'услышь.png', text: 'Прислушайся', color: 'from-purple-500 to-pink-500' },
+    { filter: 'taste', icon: 'попробуй.png', text: 'Попробуй', color: 'from-orange-500 to-red-500' },
+    { filter: 'touch', icon: 'потрогай.png', text: 'Прикоснись', color: 'from-green-500 to-emerald-500' },
+    { filter: 'feel', icon: 'ощути.png', text: 'Почувствуй', color: 'from-yellow-500 to-amber-500' },
   ]
 
   const ageFilters = [
-    { filter: 'all', text: 'Все возрасты', icon: '👥' },
-    { filter: 'family', text: 'Семьи', icon: '👨‍👩‍👧‍👦' },
-    { filter: 'adults', text: 'Взрослые', icon: '🧑' },
-    { filter: 'seniors', text: 'Пожилые', icon: '👴' },
+    { filter: 'all', text: 'Все возрасты', icon: '👥', color: 'from-gray-400 to-gray-600' },
+    { filter: 'family', text: 'Семьи', icon: '👨‍👩‍👧‍👦', color: 'from-blue-400 to-blue-600' },
+    { filter: 'adults', text: 'Взрослые', icon: '🧑', color: 'from-purple-400 to-purple-600' },
+    { filter: 'seniors', text: 'Пожилые', icon: '👴', color: 'from-green-400 to-green-600' },
   ]
 
   const distanceFilters = [
-    { filter: 'short', text: 'Короткие (< 3 км)', icon: '🚶' },
-    { filter: 'medium', text: 'Средние (3-8 км)', icon: '🏃' },
-    { filter: 'long', text: 'Длинные (> 8 км)', icon: '🥾' },
+    { filter: 'short', text: 'Короткие', subtext: '< 3 км', icon: '🚶', color: 'from-green-400 to-green-600' },
+    { filter: 'medium', text: 'Средние', subtext: '3-8 км', icon: '🏃', color: 'from-yellow-400 to-yellow-600' },
+    { filter: 'long', text: 'Длинные', subtext: '> 8 км', icon: '🥾', color: 'from-red-400 to-red-600' },
   ]
 
   const cityDistanceFilters = [
-    { filter: 'near', text: 'Близко (< 50 км)', icon: '📍' },
-    { filter: 'medium', text: 'Средне (50-70 км)', icon: '🗺️' },
-    { filter: 'far', text: 'Далеко (> 70 км)', icon: '🌲' },
+    { filter: 'near', text: 'Близко', subtext: '< 50 км', icon: '📍', color: 'from-green-400 to-green-600' },
+    { filter: 'medium', text: 'Средне', subtext: '50-70 км', icon: '🗺️', color: 'from-yellow-400 to-yellow-600' },
+    { filter: 'far', text: 'Далеко', subtext: '> 70 км', icon: '🌲', color: 'from-orange-400 to-orange-600' },
   ]
 
   // Закрытие фильтров при клике вне
@@ -126,9 +142,11 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    if (isFilterOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isFilterOpen])
 
   const handleFilterChange = (category: string, value: string) => {
     setFilters(prev => {
@@ -198,72 +216,89 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
   }
 
   return (
-    <section id="map-section" className="relative py-8 px-4 bg-gradient-to-b from-[#4D5C47] via-[#556350] to-[#4D5C47] overflow-visible">
-      {/* Декоративные элементы */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div className="absolute top-10 right-20 w-64 h-64 bg-primary-orange rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 left-20 w-80 h-80 bg-primary-orange-light rounded-full blur-3xl"></div>
+    <section id="map-section" className="relative py-12 px-4 bg-gradient-to-b from-[#2a3528] via-[#4D5C47] to-[#2a3528] overflow-visible">
+      {/* Анимированные декоративные элементы */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 right-20 w-96 h-96 bg-primary-orange rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 left-20 w-80 h-80 bg-primary-orange-light rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-orange/5 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="max-w-full mx-auto relative z-[1]">
-        <h2 className="text-[clamp(28px,4vw,48px)] font-extrabold text-white text-center mb-6 tracking-[-0.03em]">
-          Карта <span className="text-primary-orange bg-gradient-to-r from-primary-orange-light to-primary-orange bg-clip-text text-transparent">троп</span>
-        </h2>
+      <div className="max-w-[1600px] mx-auto relative z-[1]">
+        {/* Заголовок с улучшенным дизайном */}
+        <div className="text-center mb-8">
+          <h2 className="text-[clamp(32px,5vw,56px)] font-extrabold text-white mb-3 tracking-[-0.03em] relative inline-block">
+            <span className="relative z-10">Карта</span>{' '}
+            <span className="relative z-10 bg-gradient-to-r from-primary-orange-light via-primary-orange to-primary-orange-dark bg-clip-text text-transparent">
+              троп
+            </span>
+            <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary-orange to-transparent opacity-50"></div>
+          </h2>
+          <p className="text-white/80 text-lg max-w-2xl mx-auto">
+            Найдите идеальный маршрут для вашего путешествия
+          </p>
+        </div>
         
-        {/* Панель фильтров */}
-        <div className="flex flex-wrap justify-center gap-3 mb-6 max-w-6xl mx-auto" ref={filterRef}>
-          {/* Кнопка открытия фильтров */}
-          <button
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className={`
-              flex items-center gap-2 px-6 py-3 text-sm font-bold font-sans rounded-full cursor-pointer transition-all duration-300 relative z-10
-              ${isFilterOpen || activeFiltersCount > 0
-                ? 'bg-primary-orange text-white shadow-lg shadow-primary-orange/30'
-                : 'bg-white/95 text-primary-orange border-2 border-primary-orange hover:bg-primary-orange hover:text-white'
-              }
-            `}
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-            </svg>
-            <span>Фильтры</span>
-            {activeFiltersCount > 0 && (
-              <span className="bg-white text-primary-orange rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-                {activeFiltersCount}
-              </span>
-            )}
-            <svg 
-              className={`w-4 h-4 transition-transform duration-300 ${isFilterOpen ? 'rotate-180' : ''}`}
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
+        {/* Улучшенная панель фильтров */}
+        <div className="flex flex-col items-center gap-4 mb-8 max-w-7xl mx-auto" ref={filterRef}>
+          {/* Основная кнопка фильтров */}
+          <div className="flex items-center gap-4 flex-wrap justify-center">
+            <button
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
+              className={`
+                group flex items-center gap-3 px-6 py-3.5 text-sm font-bold rounded-2xl cursor-pointer transition-all duration-300 relative z-10
+                ${isFilterOpen || activeFiltersCount > 0
+                  ? 'bg-gradient-to-r from-primary-orange to-primary-orange-dark text-white shadow-xl shadow-primary-orange/40 scale-105'
+                  : 'bg-white/95 text-primary-orange border-2 border-primary-orange hover:bg-gradient-to-r hover:from-primary-orange hover:to-primary-orange-dark hover:text-white hover:scale-105 hover:shadow-lg'
+                }
+              `}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          {/* Быстрые фильтры по чувствам */}
-          <div className="flex flex-wrap gap-2">
-            {feelingFilters.map((option) => (
-              <button
-                key={option.filter}
-                onClick={() => handleQuickFilter(option.filter)}
-                className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-white text-xs font-semibold hover:bg-white/20 hover:border-white/40 transition-all duration-300 hover:scale-105"
+              <svg className="w-5 h-5 transition-transform group-hover:rotate-180 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+              <span>Фильтры</span>
+              {activeFiltersCount > 0 && (
+                <span className="bg-white text-primary-orange rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold animate-pulse">
+                  {activeFiltersCount}
+                </span>
+              )}
+              <svg 
+                className={`w-4 h-4 transition-transform duration-300 ${isFilterOpen ? 'rotate-180' : ''}`}
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
               >
-                <img src={option.icon} alt="" className="w-4 h-4 object-contain brightness-0 invert" />
-                <span>{option.text}</span>
-              </button>
-            ))}
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {/* Быстрые фильтры по чувствам с градиентами */}
+            <div className="flex flex-wrap gap-2">
+              {feelingFilters.map((option) => (
+                <button
+                  key={option.filter}
+                  onClick={() => handleQuickFilter(option.filter)}
+                  className={`
+                    group flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r ${option.color} rounded-xl text-white text-xs font-bold
+                    hover:scale-110 hover:shadow-lg transition-all duration-300 backdrop-blur-sm border border-white/20
+                    hover:border-white/40 active:scale-95
+                  `}
+                >
+                  <img src={option.icon} alt="" className="w-5 h-5 object-contain brightness-0 invert transition-transform group-hover:rotate-12 duration-300" />
+                  <span>{option.text}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Панель расширенных фильтров */}
+          {/* Расширенная панель фильтров с улучшенным дизайном */}
           {isFilterOpen && (
-            <div className="w-full mt-4 bg-white/95 backdrop-blur-md rounded-3xl p-6 shadow-2xl border border-white/20">
+            <div className="w-full mt-2 bg-white/98 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/30 animate-fadeInUp">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Фильтр по чувствам */}
-                <div>
-                  <h3 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider flex items-center gap-2">
-                    <span>✨</span> Чувства
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-gray-800 mb-4 uppercase tracking-wider flex items-center gap-2 text-primary-orange">
+                    <span className="text-lg">✨</span> Чувства
                   </h3>
                   <div className="space-y-2">
                     {feelingFilters.map((option) => (
@@ -271,24 +306,34 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
                         key={option.filter}
                         onClick={() => handleFilterChange('feeling', option.filter)}
                         className={`
-                          w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                          w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300
                           ${filters.feeling === option.filter
-                            ? 'bg-primary-orange text-white shadow-md'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ? `bg-gradient-to-r ${option.color} text-white shadow-lg scale-105`
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-102'
                           }
                         `}
                       >
-                        <img src={option.icon} alt="" className="w-5 h-5 object-contain brightness-0" style={{ filter: filters.feeling === option.filter ? 'invert(1)' : 'none' }} />
-                        <span>{option.text}</span>
+                        <img 
+                          src={option.icon} 
+                          alt="" 
+                          className="w-5 h-5 object-contain transition-all duration-300" 
+                          style={{ filter: filters.feeling === option.filter ? 'brightness(0) invert(1)' : 'brightness(0)' }}
+                        />
+                        <span className="flex-1 text-left">{option.text}</span>
+                        {filters.feeling === option.filter && (
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
                       </button>
                     ))}
                   </div>
                 </div>
 
                 {/* Фильтр по возрасту */}
-                <div>
-                  <h3 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider flex items-center gap-2">
-                    <span>👥</span> Возраст
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-gray-800 mb-4 uppercase tracking-wider flex items-center gap-2 text-primary-orange">
+                    <span className="text-lg">👥</span> Возраст
                   </h3>
                   <div className="space-y-2">
                     {ageFilters.map((option) => (
@@ -296,24 +341,29 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
                         key={option.filter}
                         onClick={() => handleFilterChange('age', option.filter)}
                         className={`
-                          w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                          w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300
                           ${filters.age === option.filter
-                            ? 'bg-primary-orange text-white shadow-md'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ? `bg-gradient-to-r ${option.color} text-white shadow-lg scale-105`
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-102'
                           }
                         `}
                       >
-                        <span className="text-lg">{option.icon}</span>
-                        <span>{option.text}</span>
+                        <span className="text-xl">{option.icon}</span>
+                        <span className="flex-1 text-left">{option.text}</span>
+                        {filters.age === option.filter && (
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
                       </button>
                     ))}
                   </div>
                 </div>
 
                 {/* Фильтр по расстоянию маршрута */}
-                <div>
-                  <h3 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider flex items-center gap-2">
-                    <span>📏</span> Расстояние
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-gray-800 mb-4 uppercase tracking-wider flex items-center gap-2 text-primary-orange">
+                    <span className="text-lg">📏</span> Расстояние
                   </h3>
                   <div className="space-y-2">
                     {distanceFilters.map((option) => (
@@ -321,24 +371,34 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
                         key={option.filter}
                         onClick={() => handleFilterChange('distance', option.filter)}
                         className={`
-                          w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                          w-full flex flex-col items-start gap-1 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300
                           ${filters.distance === option.filter
-                            ? 'bg-primary-orange text-white shadow-md'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ? `bg-gradient-to-r ${option.color} text-white shadow-lg scale-105`
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-102'
                           }
                         `}
                       >
-                        <span className="text-lg">{option.icon}</span>
-                        <span>{option.text}</span>
+                        <div className="flex items-center gap-2 w-full">
+                          <span className="text-lg">{option.icon}</span>
+                          <span className="flex-1 text-left">{option.text}</span>
+                          {filters.distance === option.filter && (
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </div>
+                        <span className={`text-xs ${filters.distance === option.filter ? 'text-white/90' : 'text-gray-500'}`}>
+                          {option.subtext}
+                        </span>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 {/* Фильтр по отдаленности от города */}
-                <div>
-                  <h3 className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wider flex items-center gap-2">
-                    <span>🏙️</span> От города
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-gray-800 mb-4 uppercase tracking-wider flex items-center gap-2 text-primary-orange">
+                    <span className="text-lg">🏙️</span> От города
                   </h3>
                   <div className="space-y-2">
                     {cityDistanceFilters.map((option) => (
@@ -346,15 +406,25 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
                         key={option.filter}
                         onClick={() => handleFilterChange('cityDistance', option.filter)}
                         className={`
-                          w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                          w-full flex flex-col items-start gap-1 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300
                           ${filters.distanceFromCity === option.filter
-                            ? 'bg-primary-orange text-white shadow-md'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ? `bg-gradient-to-r ${option.color} text-white shadow-lg scale-105`
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-102'
                           }
                         `}
                       >
-                        <span className="text-lg">{option.icon}</span>
-                        <span>{option.text}</span>
+                        <div className="flex items-center gap-2 w-full">
+                          <span className="text-lg">{option.icon}</span>
+                          <span className="flex-1 text-left">{option.text}</span>
+                          {filters.distanceFromCity === option.filter && (
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </div>
+                        <span className={`text-xs ${filters.distanceFromCity === option.filter ? 'text-white/90' : 'text-gray-500'}`}>
+                          {option.subtext}
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -363,12 +433,12 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
 
               {/* Кнопка сброса фильтров */}
               {activeFiltersCount > 0 && (
-                <div className="mt-6 pt-6 border-t border-gray-200 flex justify-center">
+                <div className="mt-8 pt-6 border-t border-gray-200 flex justify-center">
                   <button
                     onClick={() => setFilters({})}
-                    className="px-6 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800 transition-colors duration-200"
+                    className="px-8 py-3 bg-gradient-to-r from-gray-400 to-gray-600 text-white rounded-xl text-sm font-bold hover:from-gray-500 hover:to-gray-700 transition-all duration-300 hover:scale-105 shadow-lg"
                   >
-                    Сбросить все фильтры
+                    Сбросить все фильтры ({activeFiltersCount})
                   </button>
                 </div>
               )}
@@ -376,9 +446,9 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
           )}
         </div>
         
-        {/* Карта */}
+        {/* Улучшенная карта с новым стилем */}
         <div className="relative w-full mx-auto">
-          <div className="relative w-full min-h-[70vh] bg-[#f5f5f5] overflow-visible shadow-[0_0_60px_rgba(140,180,130,1),0_0_100px_rgba(120,160,110,0.9),0_0_140px_rgba(100,140,90,0.7),0_20px_60px_rgba(0,0,0,0.2)] translate-z-0 will-change-transform backface-hidden rounded-3xl overflow-hidden"
+          <div className="relative w-full min-h-[75vh] bg-gradient-to-br from-[#e8f5e9] to-[#c8e6c9] overflow-visible shadow-[0_0_80px_rgba(140,180,130,1),0_0_120px_rgba(120,160,110,0.9),0_0_160px_rgba(100,140,90,0.7),0_25px_80px_rgba(0,0,0,0.3)] translate-z-0 will-change-transform backface-hidden rounded-[2rem] overflow-hidden border-4 border-white/20"
                style={{
                  WebkitMaskImage: "url('маска карты.svg')",
                  WebkitMaskSize: "100% 100%",
@@ -392,8 +462,8 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
             <MapContainer
               center={[59.9343, 30.3351]}
               zoom={9}
-              style={{ width: '100%', height: '100%', minHeight: '70vh' }}
-              className="relative z-[1] translate-z-0 will-change-transform overflow-hidden"
+              style={{ width: '100%', height: '100%', minHeight: '75vh' }}
+              className="relative z-[1] translate-z-0 will-change-transform overflow-hidden map-container-custom"
             >
               <MapController />
               <TileLayer
