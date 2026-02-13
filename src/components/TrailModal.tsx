@@ -159,9 +159,11 @@ export default function TrailModal({ trail, isOpen, onClose }: TrailModalProps) 
                       // Если изображение с " карточка" не найдено, пробуем оригинальное
                       const currentImage = images[currentImageIndex]
                       if (currentImage.includes(' карточка')) {
-                        const originalImage = currentImage.replace(' карточка.png', '.png').replace(import.meta.env.BASE_URL, '')
-                        if (originalImage !== currentImage) {
-                          target.src = getAssetPath(originalImage)
+                        // Убираем base URL и " карточка" для получения оригинального имени
+                        const baseUrl = import.meta.env.BASE_URL
+                        const imageName = currentImage.replace(baseUrl, '').replace(' карточка.png', '.png')
+                        if (imageName !== currentImage.replace(baseUrl, '')) {
+                          target.src = getAssetPath(imageName)
                         }
                       }
                     }}
