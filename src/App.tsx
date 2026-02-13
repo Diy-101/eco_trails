@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Hero from './components/Hero'
+import Marquee from './components/Marquee'
 import ConceptSection from './components/ConceptSection'
 import MapSection from './components/MapSection'
 import RoutesSection from './components/RoutesSection'
@@ -37,6 +38,7 @@ function App() {
           onMapClick={() => document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' })} 
           onRoutesClick={() => document.getElementById('routes-section')?.scrollIntoView({ behavior: 'smooth' })} 
         />
+        <Marquee />
         <ConceptSection />
         <MapSection onTrailClick={openModal} />
         <RoutesSection onTrailClick={openModal} />
