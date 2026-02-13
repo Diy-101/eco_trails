@@ -47,8 +47,8 @@ export default function ConceptSection({ onCardClick }: ConceptSectionProps) {
       <div className="max-w-[1400px] mx-auto relative z-10">
         {/* Заголовок секции */}
         <div className="text-center mb-16 max-md:mb-12 max-sm:mb-10">
-          <h2 className="text-[clamp(36px,5.5vw,64px)] font-extrabold text-white mb-4 leading-[1.15] tracking-[-0.03em] max-md:mb-3 max-md:text-[clamp(28px,6vw,40px)] max-sm:mb-2 max-sm:text-[clamp(24px,6.5vw,32px)]">
-            Пусть маршрут точно придется тебе{' '}
+          <h2 className="text-[clamp(36px,5.5vw,64px)] font-extrabold text-white mb-4 leading-[1.15] tracking-[-0.03em] max-md:mb-3 max-md:text-[clamp(28px,6vw,40px)] max-sm:mb-2 max-sm:text-[clamp(24px,6.5vw,32px)] flex flex-col items-center justify-center px-4 max-sm:px-2">
+            <span className="text-center">Пусть маршрут точно придется тебе</span>
             <span className="text-primary-orange font-extrabold bg-gradient-to-r from-primary-orange-light via-primary-orange to-primary-orange-dark bg-clip-text text-transparent">
               по вкусу
             </span>
@@ -125,11 +125,11 @@ export default function ConceptSection({ onCardClick }: ConceptSectionProps) {
                 {/* Декоративная линия сверху */}
                 <div className="absolute top-0 left-6 right-6 max-md:left-5 max-md:right-5 max-sm:left-4 max-sm:right-4 h-0.5 bg-gradient-to-r from-transparent via-primary-orange/30 to-transparent"></div>
                 
-                <h3 className="text-2xl max-md:text-xl max-sm:text-lg font-bold text-[#1a1a1a] m-0 mb-3 max-md:mb-2 max-sm:mb-1.5 tracking-[-0.02em] leading-[1.2] transition-colors duration-300 group-hover:text-primary-orange">
+                <h3 className="text-2xl max-md:text-xl max-sm:text-lg font-bold text-[#1a1a1a] m-0 mb-3 max-md:mb-2 max-sm:mb-1.5 tracking-[-0.02em] leading-[1.2] transition-colors duration-300 group-hover:text-primary-orange text-center">
                   {card.title}
                 </h3>
                 
-                <p className="text-sm max-md:text-[13px] max-sm:text-xs font-normal text-[#666666] leading-[1.65] max-md:leading-[1.5] m-0">
+                <p className="text-sm max-md:text-[13px] max-sm:text-xs font-normal text-[#666666] leading-[1.65] max-md:leading-[1.5] m-0 text-center">
                   {card.description}
                 </p>
 

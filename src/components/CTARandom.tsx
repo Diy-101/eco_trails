@@ -274,7 +274,7 @@ export default function CTARandom({ onRandomClick }: CTARandomProps) {
             <button 
               onClick={onRandomClick}
               type="button" 
-              className="inline-block py-4 px-10 max-md:py-3 max-md:px-8 max-sm:py-2.5 max-sm:px-6 font-sans text-[13px] max-md:text-[12px] max-sm:text-[11px] font-bold text-white uppercase tracking-[0.12em] bg-[#5D6A56] border-none rounded-full max-sm:rounded-lg cursor-pointer transition-all duration-300 hover:bg-[#4d5a48] hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(93,106,86,0.5)] active:scale-[0.98] w-full max-sm:w-full"
+              className="inline-block py-4 px-10 max-md:py-3 max-md:px-8 max-sm:py-2.5 max-sm:px-6 font-sans text-[13px] max-md:text-[12px] max-sm:text-[11px] font-bold text-white tracking-[0.12em] bg-[#5D6A56] border-none rounded-full max-sm:rounded-lg cursor-pointer transition-all duration-300 hover:bg-[#4d5a48] hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(93,106,86,0.5)] active:scale-[0.98] w-full max-sm:w-full"
             >
               Случайный выбор
             </button>

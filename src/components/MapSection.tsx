@@ -508,7 +508,7 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
             </button>
 
             {/* Быстрые фильтры по чувствам */}
-            <div className="flex flex-wrap gap-2 max-md:gap-1.5 max-sm:gap-1 max-sm:w-full max-sm:justify-center">
+            <div className="flex flex-wrap gap-2 max-md:gap-1.5 max-sm:gap-1 max-sm:w-full max-sm:justify-center max-sm:overflow-x-auto max-sm:pb-2">
               {feelingFilters.map((option) => {
                 const isActive = filters.feeling === option.filter
                 return (
@@ -516,17 +516,17 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
                   key={option.filter}
                   onClick={() => handleQuickFilter(option.filter)}
                     className={`
-                      group flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 backdrop-blur-sm border active:scale-95 max-md:px-3 max-md:py-2 max-md:text-[11px] max-sm:px-2.5 max-sm:py-1.5 max-sm:text-[10px] max-sm:rounded-lg max-sm:flex-1 max-sm:justify-center max-sm:min-w-0
+                      group flex items-center gap-3 px-6 py-3 rounded-xl text-xs font-bold transition-all duration-300 backdrop-blur-sm border active:scale-95 max-md:px-5 max-md:py-2.5 max-md:text-[11px] max-md:gap-2.5 max-sm:px-3 max-sm:py-1.5 max-sm:text-[8px] max-sm:rounded-lg max-sm:flex-shrink-0 max-sm:justify-center max-sm:min-w-fit max-sm:gap-1.5 max-sm:overflow-visible
                       ${isActive
                         ? 'bg-gradient-to-r from-primary-orange-dark to-primary-orange text-white border-white/40 shadow-lg scale-105 max-sm:scale-100'
                         : 'bg-gradient-to-r from-primary-orange to-primary-orange-dark text-white border-white/20 hover:border-white/40 hover:scale-110 hover:shadow-lg max-sm:hover:scale-100'
                       }
                     `}
                 >
-                  <img src={option.icon} alt="" className="w-5 h-5 object-contain brightness-0 invert transition-transform group-hover:rotate-12 duration-300" />
-                  <span>{option.text}</span>
+                  <img src={getAssetPath(option.icon)} alt="" className="w-5 h-5 flex-shrink-0 object-contain brightness-0 invert transition-transform group-hover:rotate-12 duration-300 max-md:w-4 max-md:h-4 max-sm:w-2.5 max-sm:h-2.5" />
+                  <span className="whitespace-nowrap max-sm:text-[8px]">{option.text}</span>
                     {isActive && (
-                      <svg className="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-4 h-4 ml-1 flex-shrink-0 max-sm:w-3 max-sm:h-3 max-sm:ml-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     )}

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { getAssetPath } from '../utils/paths'
 
 interface HeaderProps {
   onMapClick?: () => void
@@ -194,40 +195,12 @@ export default function Header({ onMapClick, onRoutesClick, onConceptClick }: He
           className="flex items-center cursor-pointer group"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
-          <div className="relative">
-            {/* Свечение при hover */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#ffb84d] via-[#ff8c42] to-[#ff7040] rounded-full blur-md opacity-0 group-hover:opacity-50 transition-opacity duration-300 animate-pulse"></div>
-            
-            {/* Вращающееся кольцо при hover */}
-            <div className="absolute inset-0 rounded-full border-2 border-transparent group-hover:border-[#ff8c42]/30 group-hover:rotate-180 transition-all duration-700"></div>
-            
-            {/* Основной круг логотипа */}
-            <div className="relative w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-[#ffb84d] via-[#ff8c42] to-[#ff7040] rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-[#ff8c42]/50 transition-all duration-300 overflow-hidden">
-              {/* Блестящий эффект */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              
-              {/* Иконка солнца */}
-              <svg 
-                className="w-5 h-5 md:w-6 md:h-6 text-white relative z-10 group-hover:rotate-12 transition-transform duration-300" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" 
-                />
-              </svg>
-            </div>
-          </div>
           <span 
-            className={`ml-2 md:ml-3 text-base md:text-xl font-bold font-display transition-all duration-300 group-hover:tracking-wide ${
+            className={`text-base md:text-xl font-bold font-display uppercase transition-all duration-300 group-hover:tracking-wide ${
               isScrolled ? 'text-[#4D5C47]' : 'text-white drop-shadow-lg'
             }`}
           >
-            ЭКОТРОПЫ
+            ленстройтрест
           </span>
         </div>
 
@@ -348,7 +321,7 @@ export default function Header({ onMapClick, onRoutesClick, onConceptClick }: He
       {/* Мобильное меню */}
       <div
         ref={mobileMenuRef}
-        className={`md:hidden absolute top-full left-0 right-0 bg-white/98 backdrop-blur-md shadow-xl transition-all duration-500 ease-out overflow-hidden border-t border-gray-200/50 ${
+        className={`md:hidden absolute top-full left-0 right-0 bg-white shadow-xl transition-all duration-500 ease-out overflow-hidden border-t border-gray-200/50 ${
           isMobileMenuOpen 
             ? 'max-h-[500px] opacity-100 visible' 
             : 'max-h-0 opacity-0 invisible'

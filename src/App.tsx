@@ -55,7 +55,7 @@ function App() {
         onRoutesClick={scrollToRoutes}
         onConceptClick={scrollToConcept}
       />
-      <main>
+      <main className="overflow-x-hidden">
         <div id="hero">
           <Hero 
             onMapClick={scrollToMap} 
@@ -66,14 +66,6 @@ function App() {
         <ConceptSection onCardClick={handleConceptCardClick} />
         <ParallaxImage imageSrc="luca-bravo-uDwtAiRRvs4-unsplash.jpg" alt="Пейзаж экотропы" height="600px" />
         <MapSection onTrailClick={openModal} />
-        <ParallaxImage 
-          imageSrc="art-of-hoping-OE88GEKiJ94-unsplash.jpg" 
-          alt="Природа экотропы" 
-          height="600px"
-          gradientFrom="#2a3528"
-          gradientVia="transparent"
-          gradientTo="#000000"
-        />
         <RoutesSection onTrailClick={openModal} />
         <CTARandom onRandomClick={handleRandomClick} />
         <CTACompanion />

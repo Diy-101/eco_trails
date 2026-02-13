@@ -33,12 +33,12 @@ export default function RoutesSection({ onTrailClick }: RoutesSectionProps) {
         alt="" 
         className="absolute top-0 left-0 w-full h-full min-h-full object-cover object-center z-0 block"
       />
-      <div className="relative w-full min-h-[150vh] py-[100px] px-10 pb-[400px] z-[1] box-border max-md:py-[60px] max-md:px-4 max-md:pb-[250px] max-md:min-h-full max-sm:py-[50px] max-sm:px-3 max-sm:pb-[200px]">
+      <div className="relative w-full min-h-[150vh] py-[100px] px-10 pb-[400px] z-[1] box-border max-md:py-[60px] max-md:px-4 max-md:pb-[250px] max-md:min-h-full max-sm:py-[30px] max-sm:px-3 max-sm:pb-[20px]">
         <h2 className="text-[clamp(36px,5.5vw,58px)] font-extrabold text-white text-center m-0 mb-20 tracking-[-0.03em] relative z-[2] max-md:mb-12 max-md:text-[clamp(28px,6vw,42px)] max-sm:mb-10 max-sm:text-[clamp(24px,7vw,32px)]">
           Рекомендуемые маршруты
         </h2>
         
-        <div className="relative w-full min-h-[150vh] max-w-[1600px] mx-auto pb-[300px] max-md:min-h-auto max-md:pb-0">
+        <div className="relative w-full min-h-[150vh] max-w-[1600px] mx-auto pb-[300px] max-md:min-h-auto max-md:pb-0 max-sm:min-h-0 max-sm:pb-0">
           {recommendedRoutes.map((route, index) => {
             const position = cardPositions[index] || cardPositions[0]
             return (
@@ -74,39 +74,36 @@ export default function RoutesSection({ onTrailClick }: RoutesSectionProps) {
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-7 flex-wrap pt-3 border-t-2 border-black/8 max-w-full overflow-hidden w-full flex-shrink-0 flex-grow-0 break-words overflow-wrap-break-word max-md:gap-5 max-md:pt-2.5 max-sm:gap-3 max-sm:pt-2 max-sm:border-t">
-                  <div className="flex items-center gap-2.5 py-1 transition-transform duration-200 hover:translate-x-0.5 max-sm:gap-2 max-sm:py-0.5">
-                    <svg className="flex-shrink-0 w-5 h-5 max-md:w-4 max-md:h-4 max-sm:w-3.5 max-sm:h-3.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-transform duration-200 hover:scale-110" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M10 0C6.134 0 3 3.134 3 7C3 11.5 10 16 10 16S17 11.5 17 7C17 3.134 13.866 0 10 0ZM10 9.5C8.619 9.5 7.5 8.381 7.5 7C7.5 5.619 8.619 4.5 10 4.5C11.381 4.5 12.5 5.619 12.5 7C12.5 8.381 11.381 9.5 10 9.5Z" fill="#000000"/>
-                    </svg>
-                    <div className="flex flex-col gap-0.5 max-sm:gap-0">
-                      <span className="text-lg max-md:text-base max-sm:text-sm font-bold text-primary-orange leading-[1.2] tracking-[0.02em] drop-shadow-[0_1px_2px_rgba(255,140,66,0.3)]">
-                        {route.distance}
-                      </span>
-                      <span className="text-[10px] max-md:text-[9px] max-sm:text-[8px] font-semibold text-[#666666] uppercase tracking-[0.08em] leading-[1.2] opacity-85">
-                        РАССТОЯНИЕ
-                      </span>
-                    </div>
+                <div className="flex gap-12 justify-center items-center flex-wrap pt-6 border-t-2 border-black/8 max-w-full overflow-hidden w-full flex-shrink-0 flex-grow-0 break-words overflow-wrap-break-word max-md:gap-8 max-md:pt-5 max-sm:gap-6 max-sm:pt-4 max-sm:border-t">
+                  <div className="flex flex-col items-center gap-0.5 py-1 transition-transform duration-200 hover:translate-x-0.5 max-sm:py-0.5">
+                    <span className="text-lg max-md:text-base max-sm:text-sm font-bold text-primary-orange leading-[1.2] tracking-[0.02em] drop-shadow-[0_1px_2px_rgba(255,140,66,0.3)]">
+                      {route.distance}
+                    </span>
+                    <span className="text-[10px] max-md:text-[9px] max-sm:text-[8px] font-semibold text-[#666666] uppercase tracking-[0.08em] leading-[1.2] opacity-85">
+                      РАССТОЯНИЕ
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2.5 py-1 transition-transform duration-200 hover:translate-x-0.5 max-sm:gap-2 max-sm:py-0.5">
-                    <svg className="flex-shrink-0 w-5 h-5 max-md:w-4 max-md:h-4 max-sm:w-3.5 max-sm:h-3.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-transform duration-200 hover:scale-110" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="10" cy="10" r="9" stroke="#000000" strokeWidth="2"/>
-                      <path d="M10 5V10L13 13" stroke="#000000" strokeWidth="2" strokeLinecap="round"/>
-                    </svg>
-                    <div className="flex flex-col gap-0.5 max-sm:gap-0">
-                      <span className="text-lg max-md:text-base max-sm:text-sm font-bold text-primary-orange leading-[1.2] tracking-[0.02em] drop-shadow-[0_1px_2px_rgba(255,140,66,0.3)]">
-                        {route.timing}
-                      </span>
-                      <span className="text-[10px] max-md:text-[9px] max-sm:text-[8px] font-semibold text-[#666666] uppercase tracking-[0.08em] leading-[1.2] opacity-85">
-                        ТАЙМИНГ
-                      </span>
-                    </div>
+                  <div className="flex flex-col items-center gap-0.5 py-1 transition-transform duration-200 hover:translate-x-0.5 max-sm:py-0.5">
+                    <span className="text-lg max-md:text-base max-sm:text-sm font-bold text-primary-orange leading-[1.2] tracking-[0.02em] drop-shadow-[0_1px_2px_rgba(255,140,66,0.3)]">
+                      {route.timing}
+                    </span>
+                    <span className="text-[10px] max-md:text-[9px] max-sm:text-[8px] font-semibold text-[#666666] uppercase tracking-[0.08em] leading-[1.2] opacity-85">
+                      ТАЙМИНГ
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2.5 py-1 transition-transform duration-200 hover:translate-x-0.5 max-sm:gap-2 max-sm:py-0.5">
-                    <svg className="flex-shrink-0 w-5 h-5 max-md:w-4 max-md:h-4 max-sm:w-3.5 max-sm:h-3.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-transform duration-200 hover:scale-110" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="10" cy="10" r="8" fill="#000000"/>
-                      <path d="M6 10L9 13L14 7" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                  <div className="flex flex-col items-center gap-1 py-1 transition-transform duration-200 hover:translate-x-0.5 max-sm:gap-0.5 max-sm:py-0.5">
+                    {route.icon ? (
+                      <img 
+                        src={getAssetPath(route.icon)} 
+                        alt="Чувство" 
+                        className="flex-shrink-0 w-8 h-8 max-md:w-7 max-md:h-7 max-sm:w-6 max-sm:h-6 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-transform duration-200 hover:scale-110 object-contain"
+                      />
+                    ) : (
+                      <svg className="flex-shrink-0 w-8 h-8 max-md:w-7 max-md:h-7 max-sm:w-6 max-sm:h-6 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] transition-transform duration-200 hover:scale-110" width="32" height="32" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="10" cy="10" r="8" fill="#000000"/>
+                        <path d="M6 10L9 13L14 7" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
                     <div className="flex flex-col gap-0.5 max-sm:gap-0">
                       <span className="text-[10px] max-md:text-[9px] max-sm:text-[8px] font-semibold text-[#666666] uppercase tracking-[0.08em] leading-[1.2] opacity-85">
                         ЧУВСТВО

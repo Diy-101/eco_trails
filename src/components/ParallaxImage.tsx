@@ -19,6 +19,16 @@ export default function ParallaxImage({
 }: ParallaxImageProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [offset, setOffset] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,8 +48,12 @@ export default function ParallaxImage({
         // Используем более сильный эффект для лучшей видимости
         const scrollProgress = (windowHeight - elementCenter) / windowHeight
         const parallaxOffset = scrollProgress * 150 // увеличиваем диапазон для более заметного эффекта
+        // Ограничиваем движение, чтобы не выходить за границы
+        const maxOffset = 100
+        const minOffset = -100
+        const clampedOffset = Math.max(minOffset, Math.min(maxOffset, parallaxOffset))
         
-        setOffset(parallaxOffset)
+        setOffset(clampedOffset)
       }
     }
 
@@ -53,13 +67,17 @@ export default function ParallaxImage({
     <div 
       ref={containerRef}
       className="relative w-full overflow-hidden max-md:h-[400px] max-sm:h-[300px]"
-      style={{ height }}
+      style={{ height, overflow: 'hidden' }}
     >
       <div 
-        className="absolute inset-0 w-full h-[140%]"
+        className="absolute inset-0 w-full"
         style={{
-          transform: `translateY(${offset - 80}px)`,
-          willChange: 'transform'
+          transform: `translateY(${Math.max(-40, Math.min(40, offset - 80))}px) scale(1.8)`,
+          willChange: 'transform',
+          overflow: 'hidden',
+          height: '180%',
+          top: '-40%',
+          left: '0'
         }}
       >
         <img 
@@ -67,7 +85,10 @@ export default function ParallaxImage({
           alt={alt}
           className="w-full h-full object-cover"
           style={{
-            objectPosition: 'center -60%'
+            objectPosition: isMobile ? 'right center' : 'center center',
+            width: '100%',
+            height: '100%',
+            overflow: 'hidden'
           }}
         />
         {/* Затемнение для плавного перехода */}
