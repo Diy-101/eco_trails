@@ -749,6 +749,39 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
           </div>
         </div>
       </div>
+      
+      {/* Декоративный переход к следующей секции */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none overflow-hidden z-0">
+        {/* Волнообразный переход */}
+        <svg 
+          className="absolute bottom-0 left-0 w-full h-full" 
+          viewBox="0 0 1440 200" 
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#2a3528" stopOpacity="1" />
+              <stop offset="40%" stopColor="#4D5C47" stopOpacity="1" />
+              <stop offset="100%" stopColor="#556350" stopOpacity="1" />
+            </linearGradient>
+          </defs>
+          <path 
+            d="M0,120 C360,60 720,140 1080,100 C1260,80 1380,90 1440,85 L1440,200 L0,200 Z" 
+            fill="url(#waveGradient)"
+          />
+          <path 
+            d="M0,140 C360,80 720,160 1080,120 C1260,100 1380,110 1440,105 L1440,200 L0,200 Z" 
+            fill="#4D5C47"
+            opacity="0.7"
+          />
+        </svg>
+        
+        {/* Дополнительные декоративные элементы для плавности */}
+        <div className="absolute bottom-0 left-0 right-0 h-full bg-gradient-to-t from-[#4D5C47] via-[#4D5C47]/80 to-transparent"></div>
+        <div className="absolute -bottom-20 left-1/4 w-80 h-80 bg-primary-orange/8 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s' }}></div>
+        <div className="absolute -bottom-20 right-1/4 w-80 h-80 bg-primary-orange-light/8 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s', animationDelay: '1s' }}></div>
+      </div>
     </section>
   )
 }

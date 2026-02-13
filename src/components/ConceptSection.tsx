@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { conceptCards } from '../data/trails'
 
-export default function ConceptSection() {
+interface ConceptSectionProps {
+  onCardClick: (filterType: 'look' | 'listen' | 'taste' | 'touch' | 'feel' | null) => void
+}
+
+export default function ConceptSection({ onCardClick }: ConceptSectionProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [visibleCards, setVisibleCards] = useState<boolean[]>([])
   const sectionRef = useRef<HTMLElement>(null)
@@ -56,11 +60,27 @@ export default function ConceptSection() {
         
         {/* Карточки в улучшенной сетке */}
         <div className="grid grid-cols-5 gap-6 max-xl:grid-cols-3 max-lg:grid-cols-2 max-md:grid-cols-1">
-          {conceptCards.map((card, index) => (
+          {conceptCards.map((card, index) => {
+            // Маппинг между названиями карточек и типами фильтров
+            const getFilterType = (title: string): 'look' | 'listen' | 'taste' | 'touch' | 'feel' | null => {
+              const mapping: Record<string, 'look' | 'listen' | 'taste' | 'touch' | 'feel'> = {
+                'Увидь': 'look',
+                'Прислушайся': 'listen',
+                'Попробуй': 'taste',
+                'Потрогай': 'touch',
+                'Почувствуй': 'feel'
+              }
+              return mapping[title] || null
+            }
+
+            const filterType = getFilterType(card.title)
+
+            return (
             <article 
               key={index}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
+              onClick={() => onCardClick(filterType)}
               className={`
                 bg-white rounded-3xl overflow-hidden shadow-xl transition-all duration-500 cursor-pointer group relative
                 ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
@@ -119,7 +139,8 @@ export default function ConceptSection() {
               {/* Свечение при hover */}
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary-orange/0 via-primary-orange/0 to-primary-orange/0 group-hover:from-primary-orange/5 group-hover:via-primary-orange/10 group-hover:to-primary-orange/5 transition-all duration-500 pointer-events-none"></div>
             </article>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

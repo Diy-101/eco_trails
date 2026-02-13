@@ -24,6 +24,35 @@ npm run build
 
 Собранные файлы будут в папке `dist/`
 
+## Деплой на GitHub Pages
+
+Проект настроен для автоматического деплоя на GitHub Pages через GitHub Actions.
+
+### Настройка
+
+1. Убедитесь, что в репозитории включен GitHub Pages:
+   - Перейдите в Settings → Pages
+   - В разделе "Source" выберите "GitHub Actions"
+
+2. Workflow автоматически запустится при:
+   - Push в ветку `main` или `master`
+   - Ручном запуске через Actions → Deploy to GitHub Pages → Run workflow
+
+3. После успешного деплоя сайт будет доступен по адресу:
+   - `https://<username>.github.io/<repository-name>/` (для обычных репозиториев)
+   - `https://<username>.github.io/` (для репозиториев вида `username.github.io`)
+
+### Локальная проверка билда
+
+Для проверки билда перед деплоем:
+
+```bash
+npm run build
+npm run preview
+```
+
+Это запустит локальный сервер с собранной версией проекта.
+
 ## Структура проекта
 
 ```
