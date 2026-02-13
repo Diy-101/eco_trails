@@ -110,6 +110,9 @@ export const ecoTrails: Trail[] = [
     audioUrl: "",
     coords: [60.25, 29.85],
     difficulty: "easy",
+    ageGroup: "all",
+    distanceFromCity: 45,
+    distanceCategory: "medium",
   },
   {
     name: "Экотропа в заказнике",
@@ -130,6 +133,9 @@ export const ecoTrails: Trail[] = [
     audioUrl: "",
     coords: [60.0, 29.7],
     difficulty: "easy",
+    ageGroup: "all",
+    distanceFromCity: 30,
+    distanceCategory: "near",
   },
   {
     name: "Экомаршрут на",
@@ -150,6 +156,9 @@ export const ecoTrails: Trail[] = [
     audioUrl: "",
     coords: [60.2, 29.75],
     difficulty: "easy",
+    ageGroup: "family",
+    distanceFromCity: 40,
+    distanceCategory: "near",
   },
   {
     name: "Экотропа",
@@ -171,6 +180,9 @@ export const ecoTrails: Trail[] = [
     audioUrl: "",
     coords: [60.6, 30.0],
     difficulty: "medium",
+    ageGroup: "adults",
+    distanceFromCity: 80,
+    distanceCategory: "far",
   },
   {
     name: "Экомаршрут в",
@@ -191,6 +203,9 @@ export const ecoTrails: Trail[] = [
     audioUrl: "",
     coords: [60.25, 29.6],
     difficulty: "easy",
+    ageGroup: "all",
+    distanceFromCity: 50,
+    distanceCategory: "medium",
   },
 ];
 

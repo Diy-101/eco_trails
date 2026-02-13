@@ -12,6 +12,9 @@ export interface Trail {
   audioUrl?: string;
   coords?: [number, number];
   difficulty?: 'easy' | 'medium' | 'hard';
+  ageGroup?: 'family' | 'adults' | 'seniors' | 'all'; // Для фильтра по возрасту
+  distanceFromCity?: number; // Расстояние от СПб в км
+  distanceCategory?: 'near' | 'medium' | 'far'; // Категория отдаленности
 }
 
 export interface ConceptCard {
