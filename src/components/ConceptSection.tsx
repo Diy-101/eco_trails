@@ -28,6 +28,7 @@ export default function ConceptSection() {
 
   return (
     <section 
+      id="concept-section"
       ref={sectionRef}
       className="relative py-[100px] px-10 bg-gradient-to-b from-[#4D5C47] via-[#556350] to-[#4D5C47] overflow-hidden"
     >

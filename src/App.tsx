@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Header from './components/Header'
 import Hero from './components/Hero'
 import Marquee from './components/Marquee'
 import ConceptSection from './components/ConceptSection'
@@ -31,13 +32,24 @@ function App() {
     openModal(randomTrail)
   }
 
+  const scrollToMap = () => document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' })
+  const scrollToRoutes = () => document.getElementById('routes-section')?.scrollIntoView({ behavior: 'smooth' })
+  const scrollToConcept = () => document.getElementById('concept-section')?.scrollIntoView({ behavior: 'smooth' })
+
   return (
     <>
+      <Header 
+        onMapClick={scrollToMap}
+        onRoutesClick={scrollToRoutes}
+        onConceptClick={scrollToConcept}
+      />
       <main>
-        <Hero 
-          onMapClick={() => document.getElementById('map-section')?.scrollIntoView({ behavior: 'smooth' })} 
-          onRoutesClick={() => document.getElementById('routes-section')?.scrollIntoView({ behavior: 'smooth' })} 
-        />
+        <div id="hero">
+          <Hero 
+            onMapClick={scrollToMap} 
+            onRoutesClick={scrollToRoutes} 
+          />
+        </div>
         <Marquee />
         <ConceptSection />
         <MapSection onTrailClick={openModal} />

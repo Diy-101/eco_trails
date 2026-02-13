@@ -24,6 +24,7 @@ interface FilterState {
   distanceFromCity?: 'near' | 'medium' | 'far';
 }
 
+
 function MapController() {
   const map = useMap()
 
@@ -58,6 +59,23 @@ function MapController() {
     map.on('moveend', handleDrag)
     map.on('move', handleMove)
 
+    // Исправление проблемы с прокруткой страницы
+    // Отключаем scrollWheelZoom по умолчанию и включаем только при наведении на карту
+    map.scrollWheelZoom.disable()
+    
+    const mapContainer = map.getContainer()
+    
+    const handleMouseEnter = () => {
+      map.scrollWheelZoom.enable()
+    }
+    
+    const handleMouseLeave = () => {
+      map.scrollWheelZoom.disable()
+    }
+    
+    mapContainer.addEventListener('mouseenter', handleMouseEnter)
+    mapContainer.addEventListener('mouseleave', handleMouseLeave)
+
     // Устанавливаем границы при готовности карты
     map.whenReady(() => {
       map.setMaxBounds(bounds)
@@ -67,6 +85,8 @@ function MapController() {
       map.off('drag', handleDrag)
       map.off('moveend', handleDrag)
       map.off('move', handleMove)
+      mapContainer.removeEventListener('mouseenter', handleMouseEnter)
+      mapContainer.removeEventListener('mouseleave', handleMouseLeave)
     }
   }, [map])
 
@@ -76,7 +96,82 @@ function MapController() {
 function CustomMarker({ trail, onTrailClick, isVisible }: { trail: Trail; onTrailClick: (trail: Trail) => void; isVisible: boolean }) {
   const markerSize = 56
   const circleSize = 72
+  const popupTimeoutRef = useRef<number | null>(null)
+  const markerRef = useRef<L.Marker | null>(null)
 
+  // Получаем путь к изображению (с учетом возможного суффикса " карточка")
+  const imagePath = trail.image.includes(' карточка') 
+    ? trail.image 
+    : trail.image.replace('.png', ' карточка.png')
+
+  // Добавляем обработчики событий для попапа при открытии
+  useEffect(() => {
+    if (markerRef.current) {
+      const marker = markerRef.current
+      let mouseEnterHandler: (() => void) | null = null
+      let mouseLeaveHandler: (() => void) | null = null
+      
+      const handlePopupOpen = () => {
+        const popup = marker.getPopup()
+        if (popup) {
+          // Небольшая задержка, чтобы DOM элемент успел отрендериться
+          setTimeout(() => {
+            const popupElement = popup.getElement()
+            if (popupElement) {
+              mouseEnterHandler = () => {
+                // Отменяем закрытие попапа, если курсор над ним
+                if (popupTimeoutRef.current) {
+                  clearTimeout(popupTimeoutRef.current)
+                  popupTimeoutRef.current = null
+                }
+              }
+              
+              mouseLeaveHandler = () => {
+                // Закрываем попап при уходе курсора с задержкой
+                if (popupTimeoutRef.current) {
+                  clearTimeout(popupTimeoutRef.current)
+                }
+                popupTimeoutRef.current = window.setTimeout(() => {
+                  if (marker.getPopup()?.isOpen()) {
+                    marker.closePopup()
+                  }
+                }, 300)
+              }
+              
+              popupElement.addEventListener('mouseenter', mouseEnterHandler)
+              popupElement.addEventListener('mouseleave', mouseLeaveHandler)
+            }
+          }, 50)
+        }
+      }
+      
+      const handlePopupClose = () => {
+        const popup = marker.getPopup()
+        if (popup) {
+          const popupElement = popup.getElement()
+          if (popupElement && mouseEnterHandler && mouseLeaveHandler) {
+            popupElement.removeEventListener('mouseenter', mouseEnterHandler)
+            popupElement.removeEventListener('mouseleave', mouseLeaveHandler)
+            mouseEnterHandler = null
+            mouseLeaveHandler = null
+          }
+        }
+      }
+      
+      marker.on('popupopen', handlePopupOpen)
+      marker.on('popupclose', handlePopupClose)
+      
+      return () => {
+        marker.off('popupopen', handlePopupOpen)
+        marker.off('popupclose', handlePopupClose)
+        if (popupTimeoutRef.current) {
+          clearTimeout(popupTimeoutRef.current)
+        }
+      }
+    }
+  }, [isVisible])
+
+  // Создаем иконку
   const icon = L.divIcon({
     className: 'map-marker-with-circle',
     html: `
@@ -93,24 +188,121 @@ function CustomMarker({ trail, onTrailClick, isVisible }: { trail: Trail; onTrai
 
   return (
     <Marker
+      ref={markerRef}
       position={trail.coords!}
       icon={icon}
       eventHandlers={{
         click: () => onTrailClick(trail),
-        mouseover: () => {},
-        mouseout: () => {}
+        mouseover: (e) => {
+          const marker = e.target
+          // Отменяем любой таймер закрытия
+          if (popupTimeoutRef.current) {
+            clearTimeout(popupTimeoutRef.current)
+            popupTimeoutRef.current = null
+          }
+          marker.openPopup()
+        },
+        mouseout: (e) => {
+          const marker = e.target
+          // Небольшая задержка, чтобы пользователь мог перейти на попап
+          if (popupTimeoutRef.current) {
+            clearTimeout(popupTimeoutRef.current)
+          }
+          popupTimeoutRef.current = window.setTimeout(() => {
+            // Проверяем, открыт ли попап и не находится ли курсор над ним
+            const popup = marker.getPopup()
+            if (popup && popup.isOpen()) {
+              const popupElement = popup.getElement()
+              if (popupElement) {
+                // Используем mouseenter/mouseleave события через проверку элемента под курсором
+                const checkAndClose = () => {
+                  const mouseEvent = window.event as MouseEvent
+                  if (mouseEvent) {
+                    const elementUnderCursor = document.elementFromPoint(mouseEvent.clientX, mouseEvent.clientY)
+                    if (elementUnderCursor) {
+                      const isOverPopup = popupElement.contains(elementUnderCursor) || elementUnderCursor.closest('.custom-popup') !== null
+                      const isOverMarker = elementUnderCursor.closest('.map-marker-with-circle') !== null
+                      if (!isOverPopup && !isOverMarker) {
+                        marker.closePopup()
+                      }
+                    } else {
+                      marker.closePopup()
+                    }
+                  } else {
+                    marker.closePopup()
+                  }
+                }
+                checkAndClose()
+              } else {
+                marker.closePopup()
+              }
+            }
+          }, 300)
+        }
       }}
     >
-      <Popup className="custom-popup" closeButton={false}>
-        <div className="popup-content">
-          <h3 className="popup-title">{trail.name} {trail.subtitle}</h3>
-          <p className="popup-description">{trail.description.substring(0, 100)}...</p>
+      <Popup 
+        className="custom-popup" 
+        closeButton={false}
+        autoPan={false}
+      >
+        <div className="popup-content ticket-popup">
+          <div className="ticket-layout">
+            {trail.image && (
+              <>
+                <div className="ticket-image-wrapper">
+                  <div className="ticket-image-overlay"></div>
+                  <img 
+                    src={imagePath} 
+                    alt={trail.name} 
+                    className="ticket-image"
+                    onError={(e) => {
+                      // Если изображение с " карточка" не найдено, пробуем оригинальное
+                      const target = e.target as HTMLImageElement
+                      if (imagePath.includes(' карточка')) {
+                        target.src = trail.image
+                      }
+                    }}
+                  />
+                </div>
+                <div className="ticket-perforation-vertical"></div>
+              </>
+            )}
+            <div className="ticket-content">
+              <div className="ticket-info">
+                <h3 className="ticket-title">{trail.name}</h3>
+                {trail.subtitle && <p className="ticket-subtitle">{trail.subtitle}</p>}
+                <div className="ticket-details">
+                  {trail.distance && (
+                    <div className="ticket-detail-item">
+                      <svg className="ticket-detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span className="ticket-detail-value">{trail.distance}</span>
+                    </div>
+                  )}
+                  {trail.timing && (
+                    <div className="ticket-detail-item">
+                      <svg className="ticket-detail-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="ticket-detail-value">{trail.timing}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
           <button 
             onClick={() => onTrailClick(trail)}
-            className="popup-button"
+                className="ticket-button"
           >
-            Подробнее
+                <span>Подробнее</span>
+                <svg className="ticket-button-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
           </button>
+            </div>
+          </div>
         </div>
       </Popup>
     </Marker>
@@ -224,9 +416,19 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
   const activeFiltersCount = Object.keys(filters).length
 
   const handleQuickFilter = (filterType: string) => {
-    const targetTrail = ecoTrails.find(trail => trail.filterType === filterType)
-    if (targetTrail) {
-      onTrailClick(targetTrail)
+    // Если фильтр уже активен, снимаем его
+    if (filters.feeling === filterType) {
+      setFilters(prev => {
+        const newFilters = { ...prev }
+        delete newFilters.feeling
+        return newFilters
+      })
+    } else {
+      // Устанавливаем фильтр по чувствам
+      setFilters(prev => ({
+        ...prev,
+        feeling: filterType as 'look' | 'listen' | 'taste' | 'touch' | 'feel'
+      }))
     }
   }
 
@@ -289,16 +491,30 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
 
             {/* Быстрые фильтры по чувствам */}
             <div className="flex flex-wrap gap-2">
-              {feelingFilters.map((option) => (
+              {feelingFilters.map((option) => {
+                const isActive = filters.feeling === option.filter
+                return (
                 <button
                   key={option.filter}
                   onClick={() => handleQuickFilter(option.filter)}
-                  className="group flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary-orange to-primary-orange-dark rounded-xl text-white text-xs font-bold hover:scale-110 hover:shadow-lg transition-all duration-300 backdrop-blur-sm border border-white/20 hover:border-white/40 active:scale-95"
+                    className={`
+                      group flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 backdrop-blur-sm border active:scale-95
+                      ${isActive
+                        ? 'bg-gradient-to-r from-primary-orange-dark to-primary-orange text-white border-white/40 shadow-lg scale-105'
+                        : 'bg-gradient-to-r from-primary-orange to-primary-orange-dark text-white border-white/20 hover:border-white/40 hover:scale-110 hover:shadow-lg'
+                      }
+                    `}
                 >
                   <img src={option.icon} alt="" className="w-5 h-5 object-contain brightness-0 invert transition-transform group-hover:rotate-12 duration-300" />
                   <span>{option.text}</span>
+                    {isActive && (
+                      <svg className="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
                 </button>
-              ))}
+                )
+              })}
             </div>
           </div>
 
@@ -458,9 +674,9 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
         </div>
         
         {/* Переделанная карта с интересным дизайном */}
-        <div className="relative w-full mx-auto max-w-7xl">
+        <div className="relative w-full mx-auto max-w-5xl">
           {/* Внешний контейнер с эффектами */}
-          <div className="relative w-full h-[85vh] min-h-[650px] group">
+          <div className="relative w-full h-[60vh] min-h-[500px] group">
             {/* Декоративные градиенты вокруг карты */}
             <div className="absolute -inset-4 bg-gradient-to-br from-primary-orange/20 via-primary-orange-light/10 to-transparent rounded-[3rem] blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
             <div className="absolute -inset-2 bg-gradient-to-tr from-[#4D5C47]/30 via-transparent to-[#556350]/20 rounded-[2.5rem] blur-xl"></div>
@@ -484,47 +700,35 @@ export default function MapSection({ onTrailClick }: MapSectionProps) {
                 zoom={9}
                 style={{ width: '100%', height: '100%' }}
                 className="relative z-[1] map-container-custom"
-                scrollWheelZoom={true}
+                scrollWheelZoom={false}
                 doubleClickZoom={true}
                 dragging={true}
                 touchZoom={true}
               >
                 <MapController />
-                {/* 
-                  БЕСПЛАТНЫЕ API ДЛЯ КАРТ (можно переключаться):
-                  
-                  1. OpenTopoMap (текущий) - топографический стиль, идеален для природы
-                  url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
-                  
-                  2. OpenStreetMap - стандартный стиль
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  
-                  3. CartoDB Positron - светлый минималистичный
-                  url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-                  
-                  4. CartoDB Voyager - цветной стиль
-                  url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-                  
-                  5. Esri World Imagery - спутниковые снимки
-                  url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                  
-                  6. MapTiler (требует бесплатный API ключ) - очень красивые стили
-                  url="https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=YOUR_KEY"
-                */}
+                {/* Стиль как у Organic Maps - OpenStreetMap с улучшенной видимостью */}
                 <TileLayer
-                  url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
-                  attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-                  maxZoom={17}
-                  subdomains="abc"
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Style inspired by <a href="https://organicmaps.app">Organic Maps</a>'
+                  maxZoom={18}
                 />
-                {ecoTrails.filter(trail => trail.coords).map((trail, index) => (
-                  <CustomMarker 
-                    key={index} 
-                    trail={trail} 
-                    onTrailClick={onTrailClick}
-                    isVisible={filteredTrails.includes(trail)}
-                  />
-                ))}
+                {ecoTrails.filter(trail => trail.coords).map((trail, index) => {
+                  // Проверяем видимость маркера по имени и координатам
+                  const isVisible = filteredTrails.some(ft => 
+                    ft.name === trail.name && 
+                    ft.coords && trail.coords &&
+                    ft.coords[0] === trail.coords[0] && 
+                    ft.coords[1] === trail.coords[1]
+                  )
+                  return (
+                    <CustomMarker 
+                      key={`${trail.name}-${index}`} 
+                      trail={trail} 
+                      onTrailClick={onTrailClick}
+                      isVisible={isVisible}
+                    />
+                  )
+                })}
               </MapContainer>
             </div>
           </div>
